@@ -1,2319 +1,755 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Deniz Afsar — Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      :root {
-        --bg: #090909;
-        --bg2: #111111;
-        --bg3: #181818;
-        --line: rgba(255, 255, 255, 0.08);
-        --text: #e8e2d9;
-        --muted: #7a7570;
-        --accent: #c8a96e;
-        --white: #ffffff;
-        --font-disp: "Cormorant Garamond", serif;
-        --font-ui: "Syne", sans-serif;
-        --radius: 2px;
-      }
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--font-ui);
-        font-size: 15px;
-        line-height: 1.6;
-        overflow-x: hidden;
-        cursor: none;
-      }
-      .cursor-dot {
-        width: 8px;
-        height: 8px;
-        background: var(--accent);
-        border-radius: 50%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-      }
-      .cursor-ring {
-        width: 36px;
-        height: 36px;
-        border: 1px solid rgba(200, 169, 110, 0.4);
-        border-radius: 50%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        z-index: 9998;
-        transform: translate(-50%, -50%);
-        transition:
-          width 0.2s,
-          height 0.2s,
-          border-color 0.2s;
-      }
-      .cursor-ring.expanded {
-        width: 56px;
-        height: 56px;
-        border-color: var(--accent);
-      }
-      @media (pointer: coarse) {
-        body {
-          cursor: auto;
-        }
-        .cursor-dot,
-        .cursor-ring {
-          display: none;
-        }
-      }
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-        background-size: 180px;
-        pointer-events: none;
-        z-index: 1000;
-        opacity: 0.35;
-      }
-      nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 900;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 24px 48px;
-        background: linear-gradient(
-          to bottom,
-          rgba(9, 9, 9, 0.97) 0%,
-          transparent 100%
-        );
-      }
-      .nav-logo {
-        font-family: var(--font-disp);
-        font-size: 20px;
-        font-weight: 300;
-        letter-spacing: 0.08em;
-        color: var(--text);
-        text-decoration: none;
-      }
-      .nav-logo span {
-        color: var(--accent);
-      }
-      .nav-links {
-        display: flex;
-        gap: 36px;
-        list-style: none;
-      }
-      .nav-links a {
-        color: var(--muted);
-        text-decoration: none;
-        font-size: 11px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        transition: color 0.3s;
-      }
-      .nav-links a:hover {
-        color: var(--accent);
-      }
-      .nav-burger {
-        display: none;
-        flex-direction: column;
-        gap: 5px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 4px;
-        z-index: 910;
-      }
-      .nav-burger span {
-        display: block;
-        width: 24px;
-        height: 1.5px;
-        background: var(--text);
-        transition:
-          transform 0.3s,
-          opacity 0.3s;
-      }
-      .nav-burger.open span:nth-child(1) {
-        transform: translateY(6.5px) rotate(45deg);
-      }
-      .nav-burger.open span:nth-child(2) {
-        opacity: 0;
-      }
-      .nav-burger.open span:nth-child(3) {
-        transform: translateY(-6.5px) rotate(-45deg);
-      }
-      .nav-mobile {
-        position: fixed;
-        inset: 0;
-        background: rgba(9, 9, 9, 0.98);
-        z-index: 895;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 40px;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s;
-      }
-      .nav-mobile.open {
-        opacity: 1;
-        pointer-events: all;
-      }
-      .nav-mobile a {
-        font-family: var(--font-disp);
-        font-size: clamp(32px, 8vw, 52px);
-        font-weight: 300;
-        color: var(--text);
-        text-decoration: none;
-        letter-spacing: 0.04em;
-        transition: color 0.2s;
-      }
-      .nav-mobile a:hover {
-        color: var(--accent);
-      }
-      #hero {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 0 48px 80px;
-        position: relative;
-        overflow: hidden;
-      }
-      .hero-bg {
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(
-            ellipse 60% 60% at 80% 20%,
-            rgba(200, 169, 110, 0.07) 0%,
-            transparent 70%
-          ),
-          radial-gradient(
-            ellipse 40% 50% at 20% 80%,
-            rgba(139, 107, 61, 0.05) 0%,
-            transparent 70%
-          ),
-          var(--bg);
-      }
-      .hero-line {
-        position: absolute;
-        top: 0;
-        left: 48px;
-        bottom: 0;
-        width: 1px;
-        background: var(--line);
-      }
-      .hero-eyebrow {
-        font-size: 11px;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 24px;
-        opacity: 0;
-        animation: fadeUp 0.8s ease 0.3s forwards;
-      }
-      .hero-name {
-        font-family: var(--font-disp);
-        font-size: clamp(60px, 10vw, 148px);
-        font-weight: 300;
-        line-height: 0.9;
-        letter-spacing: -0.02em;
-        color: var(--white);
-        position: relative;
-        z-index: 1;
-        opacity: 0;
-        animation: fadeUp 1s ease 0.5s forwards;
-      }
-      .hero-name em {
-        font-style: italic;
-        color: var(--accent);
-      }
-      .hero-sub {
-        margin-top: 28px;
-        font-size: 12px;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--muted);
-        max-width: 380px;
-        opacity: 0;
-        animation: fadeUp 0.8s ease 0.8s forwards;
-      }
-      .hero-scroll {
-        position: absolute;
-        right: 48px;
-        bottom: 80px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        opacity: 0;
-        animation: fadeIn 1s ease 1.2s forwards;
-      }
-      .hero-scroll span {
-        font-size: 10px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--muted);
-        writing-mode: vertical-rl;
-      }
-      .scroll-line {
-        width: 1px;
-        height: 60px;
-        background: linear-gradient(to bottom, var(--accent), transparent);
-        animation: scrollPulse 2s ease-in-out infinite;
-      }
-      @keyframes scrollPulse {
-        0%,
-        100% {
-          opacity: 0.3;
-          transform: scaleY(1);
-        }
-        50% {
-          opacity: 1;
-          transform: scaleY(0.6);
-        }
-      }
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(24px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      section {
-        position: relative;
-      }
-      .section-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 100px 48px;
-      }
-      .section-label {
-        font-size: 10px;
-        letter-spacing: 0.3em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-      .section-label::after {
-        content: "";
-        height: 1px;
-        width: 40px;
-        background: var(--accent);
-        opacity: 0.5;
-      }
-      .section-title {
-        font-family: var(--font-disp);
-        font-size: clamp(36px, 5vw, 72px);
-        font-weight: 300;
-        line-height: 1.05;
-        color: var(--white);
-        margin-bottom: 48px;
-      }
-      .section-title em {
-        font-style: italic;
-        color: var(--accent);
-      }
-      hr.divider {
-        border: none;
-        border-top: 1px solid var(--line);
-        margin: 0;
-      }
-      #about {
-        background: var(--bg);
-      }
-      .about-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
-        align-items: start;
-      }
-      .about-bio {
-        font-family: var(--font-disp);
-        font-size: 21px;
-        font-weight: 300;
-        line-height: 1.7;
-        color: var(--text);
-      }
-      .about-bio strong {
-        color: var(--white);
-        font-weight: 400;
-      }
-      .about-details {
-        display: flex;
-        flex-direction: column;
-        gap: 36px;
-      }
-      .detail-group h4 {
-        font-size: 10px;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 14px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid var(--line);
-      }
-      .tag-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .tag {
-        font-size: 11px;
-        letter-spacing: 0.1em;
-        padding: 6px 14px;
-        border: 1px solid var(--line);
-        color: var(--muted);
-        border-radius: var(--radius);
-        transition:
-          border-color 0.3s,
-          color 0.3s;
-      }
-      .tag:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-      #portfolio {
-        background: var(--bg2);
-      }
-      .portfolio-filter {
-        display: flex;
-        gap: 4px;
-        margin-bottom: 44px;
-        flex-wrap: wrap;
-      }
-      .filter-btn {
-        font-family: var(--font-ui);
-        font-size: 11px;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        padding: 8px 18px;
-        background: transparent;
-        border: 1px solid var(--line);
-        color: var(--muted);
-        cursor: pointer;
-        transition: all 0.25s;
-      }
-      .filter-btn.active,
-      .filter-btn:hover {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: var(--bg);
-      }
-      .portfolio-grid {
-        display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        grid-auto-rows: 260px;
-        gap: 10px;
-      }
-      .p-item {
-        position: relative;
-        overflow: hidden;
-        background: var(--bg3);
-        cursor: pointer;
-      }
-      .p-item.wide {
-        grid-column: span 7;
-      }
-      .p-item.mid {
-        grid-column: span 5;
-      }
-      .p-item.third {
-        grid-column: span 4;
-      }
-      .p-item.half {
-        grid-column: span 6;
-      }
-      .p-item.full {
-        grid-column: span 12;
-      }
-      .p-item > iframe,
-      .p-item > img,
-      .p-item > video,
-      .p-item > .p-placeholder {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-      }
-      .p-item > iframe {
-        border: none;
-        pointer-events: none;
-      }
-      .p-item > img {
-        object-fit: cover;
-        display: block;
-        transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-      .p-item > video {
-        object-fit: cover;
-        display: block;
-      }
-      .p-item:hover > img {
-        transform: scale(1.04);
-      }
-      .p-placeholder {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        text-align: center;
-        border: 1px dashed rgba(200, 169, 110, 0.2);
-      }
-      .ph-icon {
-        font-size: 26px;
-        opacity: 0.3;
-      }
-      .ph-label {
-        font-size: 10px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--accent);
-        opacity: 0.5;
-      }
-      .ph-hint {
-        font-size: 11px;
-        color: var(--muted);
-        max-width: 200px;
-        line-height: 1.5;
-      }
-      .p-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to top,
-          rgba(0, 0, 0, 0.88) 0%,
-          rgba(0, 0, 0, 0.05) 60%,
-          transparent 100%
-        );
-        opacity: 0;
-        transition: opacity 0.4s;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 20px;
-        z-index: 2;
-      }
-      .p-item:hover .p-overlay {
-        opacity: 1;
-      }
-      .p-overlay h3 {
-        font-family: var(--font-disp);
-        font-size: 20px;
-        font-weight: 300;
-        color: var(--white);
-      }
-      .p-overlay span {
-        font-size: 10px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 3px;
-        display: block;
-      }
-      .p-overlay small {
-        font-size: 11px;
-        color: rgba(232, 226, 217, 0.55);
-        margin-top: 3px;
-        display: block;
-      }
-      .p-zoom {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        z-index: 3;
-        width: 30px;
-        height: 30px;
-        background: rgba(9, 9, 9, 0.75);
-        border: 1px solid rgba(200, 169, 110, 0.3);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-      .p-zoom svg {
-        width: 13px;
-        height: 13px;
-        stroke: var(--accent);
-        fill: none;
-        stroke-width: 2;
-      }
-      .p-item:hover .p-zoom {
-        opacity: 1;
-      }
-      .p-play {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: none;
-        z-index: 2;
-      }
-      .p-play-btn {
-        width: 56px;
-        height: 56px;
-        border: 2px solid rgba(255, 255, 255, 0.6);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition:
-          border-color 0.3s,
-          transform 0.3s;
-      }
-      .p-play-btn svg {
-        fill: white;
-        width: 18px;
-        height: 18px;
-        margin-left: 4px;
-      }
-      .p-item:hover .p-play-btn {
-        border-color: var(--accent);
-        transform: scale(1.1);
-      }
-      #cv {
-        background: var(--bg);
-      }
-      .cv-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
-        align-items: center;
-      }
-      .cv-preview {
-        position: relative;
-        background: var(--bg3);
-        border: 1px solid var(--line);
-        overflow: hidden;
-        aspect-ratio: 3/4;
-        cursor: pointer;
-        transition: border-color 0.3s;
-      }
-      .cv-preview:hover {
-        border-color: var(--accent);
-      }
-      .cv-preview img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.5s ease;
-      }
-      .cv-preview:hover img {
-        transform: scale(1.02);
-      }
-      .cv-preview-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(9, 9, 9, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-      .cv-preview:hover .cv-preview-overlay {
-        opacity: 1;
-      }
-      .cv-preview-overlay span {
-        font-size: 11px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--white);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 10px 20px;
-      }
-      .cv-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-        padding: 32px;
-        text-align: center;
-      }
-      .cv-placeholder p {
-        font-size: 11px;
-        color: var(--muted);
-        line-height: 1.6;
-      }
-      .cv-info .section-title {
-        margin-bottom: 20px;
-      }
-      .cv-info > p {
-        font-family: var(--font-disp);
-        font-size: 18px;
-        font-weight: 300;
-        color: var(--muted);
-        line-height: 1.8;
-        margin-bottom: 40px;
-      }
-      .cv-stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1px;
-        background: var(--line);
-        margin-bottom: 40px;
-        border: 1px solid var(--line);
-      }
-      .cv-stat {
-        background: var(--bg);
-        padding: 20px;
-      }
-      .cv-stat .num {
-        font-family: var(--font-disp);
-        font-size: 36px;
-        font-weight: 300;
-        color: var(--accent);
-        line-height: 1;
-      }
-      .cv-stat .label {
-        font-size: 10px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-top: 4px;
-      }
-      .cv-actions {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 14px 28px;
-        background: var(--accent);
-        color: var(--bg);
-        font-family: var(--font-ui);
-        font-size: 11px;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        text-decoration: none;
-        transition:
-          background 0.25s,
-          transform 0.2s;
-      }
-      .btn-primary:hover {
-        background: #d4b87a;
-        transform: translateY(-2px);
-      }
-      .btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 14px 28px;
-        background: transparent;
-        border: 1px solid var(--line);
-        color: var(--muted);
-        font-family: var(--font-ui);
-        font-size: 11px;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        text-decoration: none;
-        transition:
-          border-color 0.25s,
-          color 0.25s;
-      }
-      .btn-secondary:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-      .btn-primary svg,
-      .btn-secondary svg {
-        width: 14px;
-        height: 14px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 2;
-      }
-      #life {
-        background: var(--bg2);
-      }
-      .life-tabs {
-        display: flex;
-        margin-bottom: 44px;
-        border-bottom: 1px solid var(--line);
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      .life-tab {
-        font-size: 11px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        padding: 12px 24px;
-        background: none;
-        border: none;
-        color: var(--muted);
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        margin-bottom: -1px;
-        transition:
-          color 0.25s,
-          border-color 0.25s;
-        white-space: nowrap;
-      }
-      .life-tab.active {
-        color: var(--accent);
-        border-bottom-color: var(--accent);
-      }
-      .life-tab:hover {
-        color: var(--text);
-      }
-      .life-panel {
-        display: none;
-      }
-      .life-panel.active {
-        display: block;
-      }
-      .photo-mosaic {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-      }
-      .photo-mosaic .ph-tall {
-        grid-row: span 2;
-      }
-      .photo-cell {
-        background: var(--bg3);
-        overflow: hidden;
-        aspect-ratio: 4/3;
-        position: relative;
-        cursor: pointer;
-      }
-      .photo-cell.ph-tall {
-        aspect-ratio: unset;
-      }
-      .photo-cell img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.5s ease;
-      }
-      .photo-cell:hover img {
-        transform: scale(1.05);
-      }
-      .photo-cell.placeholder {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        border: 1px dashed rgba(200, 169, 110, 0.2);
-        padding: 20px;
-        text-align: center;
-        cursor: default;
-      }
-      .photo-cell.placeholder span {
-        font-size: 26px;
-        opacity: 0.2;
-      }
-      .photo-cell.placeholder p {
-        font-size: 11px;
-        color: var(--muted);
-        letter-spacing: 0.1em;
-      }
-      #contact {
-        background: var(--bg);
-      }
-      .contact-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
-        align-items: center;
-      }
-      .contact-left .section-title {
-        margin-bottom: 20px;
-      }
-      .contact-left > p {
-        font-family: var(--font-disp);
-        font-size: 18px;
-        font-weight: 300;
-        color: var(--muted);
-        line-height: 1.7;
-        margin-bottom: 44px;
-      }
-      .contact-links {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .contact-link {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        text-decoration: none;
-        color: var(--text);
-        padding: 18px 22px;
-        border: 1px solid var(--line);
-        transition:
-          border-color 0.3s,
-          background 0.3s;
-      }
-      .contact-link:hover {
-        border-color: var(--accent);
-        background: rgba(200, 169, 110, 0.04);
-      }
-      .cl-icon {
-        width: 40px;
-        height: 40px;
-        border: 1px solid var(--line);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        flex-shrink: 0;
-        transition: border-color 0.3s;
-      }
-      .contact-link:hover .cl-icon {
-        border-color: var(--accent);
-      }
-      .cl-text {
-        display: flex;
-        flex-direction: column;
-      }
-      .cl-label {
-        font-size: 10px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-      .cl-value {
-        font-size: 13px;
-        color: var(--text);
-        margin-top: 2px;
-      }
-      .cl-arrow {
-        margin-left: auto;
-        color: var(--muted);
-        font-size: 18px;
-        transition:
-          transform 0.3s,
-          color 0.3s;
-      }
-      .contact-link:hover .cl-arrow {
-        transform: translate(4px, -4px);
-        color: var(--accent);
-      }
-      .contact-right {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .contact-monogram {
-        font-family: var(--font-disp);
-        font-size: clamp(80px, 12vw, 180px);
-        font-weight: 300;
-        font-style: italic;
-        color: transparent;
-        -webkit-text-stroke: 1px rgba(200, 169, 110, 0.18);
-        letter-spacing: -0.05em;
-        line-height: 1;
-        user-select: none;
-      }
-      footer {
-        padding: 28px 48px;
-        border-top: 1px solid var(--line);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      footer p {
-        font-size: 11px;
-        letter-spacing: 0.1em;
-        color: var(--muted);
-      }
-      footer span {
-        color: var(--accent);
-      }
-      .reveal {
-        opacity: 0;
-        transform: translateY(28px);
-        transition:
-          opacity 0.8s ease,
-          transform 0.8s ease;
-      }
-      .reveal.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      #lightbox {
-        position: fixed;
-        inset: 0;
-        z-index: 9000;
-        background: rgba(5, 5, 5, 0.97);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-      }
-      #lightbox.open {
-        opacity: 1;
-        pointer-events: all;
-      }
-      .lb-media-wrap {
-        position: relative;
-        max-width: 82vw;
-        max-height: 82vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      #lb-img {
-        max-width: 82vw;
-        max-height: 82vh;
-        object-fit: contain;
-        display: block;
-        border: 1px solid rgba(200, 169, 110, 0.1);
-        transition: opacity 0.2s ease;
-      }
-      #lb-img.hidden {
-        display: none;
-      }
-      #lb-video {
-        max-width: 82vw;
-        max-height: 82vh;
-        display: none;
-        outline: none;
-        border: 1px solid rgba(200, 169, 110, 0.1);
-        background: #000;
-      }
-      #lb-video.active {
-        display: block;
-      }
-      .lb-caption {
-        position: absolute;
-        bottom: -52px;
-        left: 0;
-        right: 0;
-        text-align: center;
-      }
-      .lb-caption h4 {
-        font-family: var(--font-disp);
-        font-size: 20px;
-        font-weight: 300;
-        color: var(--white);
-      }
-      .lb-caption span {
-        font-size: 10px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--accent);
-      }
-      .lb-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 46px;
-        height: 46px;
-        background: rgba(9, 9, 9, 0.8);
-        border: 1px solid rgba(200, 169, 110, 0.3);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition:
-          border-color 0.25s,
-          background 0.25s;
-        z-index: 2;
-        min-width: 44px;
-        min-height: 44px;
-      }
-      .lb-btn:hover {
-        border-color: var(--accent);
-        background: rgba(200, 169, 110, 0.1);
-      }
-      .lb-btn svg {
-        width: 16px;
-        height: 16px;
-        stroke: var(--accent);
-        fill: none;
-        stroke-width: 2;
-      }
-      #lb-prev {
-        left: -66px;
-      }
-      #lb-next {
-        right: -66px;
-      }
-      #lb-close {
-        position: fixed;
-        top: 24px;
-        right: 28px;
-        width: 44px;
-        height: 44px;
-        background: rgba(9, 9, 9, 0.8);
-        border: 1px solid rgba(200, 169, 110, 0.3);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: border-color 0.25s;
-        z-index: 9001;
-      }
-      #lb-close:hover {
-        border-color: var(--accent);
-      }
-      #lb-close svg {
-        width: 15px;
-        height: 15px;
-        stroke: var(--text);
-        fill: none;
-        stroke-width: 2;
-      }
-      .lb-counter {
-        position: fixed;
-        bottom: 28px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        align-items: center;
-        gap: 7px;
-      }
-      .lb-dot {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        background: var(--muted);
-        transition:
-          background 0.2s,
-          transform 0.2s;
-      }
-      .lb-dot.active {
-        background: var(--accent);
-        transform: scale(1.4);
-      }
-      @media (max-width: 768px) {
-        nav {
-          padding: 18px 20px;
-        }
-        .nav-links {
-          display: none;
-        }
-        .nav-burger {
-          display: flex;
-        }
-        .section-inner {
-          padding: 72px 20px;
-        }
-        #hero {
-          padding: 0 20px 60px;
-        }
-        .hero-line {
-          left: 20px;
-        }
-        .hero-scroll {
-          display: none;
-        }
-        .about-grid {
-          grid-template-columns: 1fr;
-          gap: 44px;
-        }
-        .portfolio-grid {
-          grid-template-columns: 1fr 1fr;
-          grid-auto-rows: 200px;
-          gap: 6px;
-        }
-        .p-item.wide,
-        .p-item.mid,
-        .p-item.third,
-        .p-item.half {
-          grid-column: span 1;
-        }
-        .p-item.full {
-          grid-column: span 2;
-        }
-        .cv-grid {
-          grid-template-columns: 1fr;
-          gap: 40px;
-        }
-        .cv-preview {
-          aspect-ratio: unset;
-          height: 420px;
-        }
-        .photo-mosaic {
-          grid-template-columns: 1fr 1fr;
-        }
-        .photo-mosaic .ph-tall {
-          grid-row: span 2;
-        }
-        .contact-grid {
-          grid-template-columns: 1fr;
-        }
-        .contact-right {
-          display: none;
-        }
-        footer {
-          flex-direction: column;
-          text-align: center;
-        }
-        #lb-prev {
-          left: 6px;
-        }
-        #lb-next {
-          right: 6px;
-        }
-        #lb-img,
-        #lb-video {
-          max-width: 94vw;
-          max-height: 75vh;
-        }
-        .lb-media-wrap {
-          max-width: 94vw;
-        }
-        .lb-caption {
-          bottom: -44px;
-        }
-      }
-      @media (max-width: 480px) {
-        .portfolio-grid {
-          grid-template-columns: 1fr;
-          grid-auto-rows: 220px;
-        }
-        .p-item.wide,
-        .p-item.mid,
-        .p-item.third,
-        .p-item.half,
-        .p-item.full {
-          grid-column: span 1;
-        }
-        .photo-mosaic {
-          grid-template-columns: 1fr;
-        }
-        .photo-mosaic .ph-tall {
-          grid-row: span 1;
-          aspect-ratio: 4/3;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="cursor-dot" id="cursorDot"></div>
-    <div class="cursor-ring" id="cursorRing"></div>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deniz Afsar — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    :root{
+      --bg:#090909;--bg2:#111111;--bg3:#181818;
+      --line:rgba(255,255,255,0.08);--text:#e8e2d9;--muted:#7a7570;
+      --accent:#c8a96e;--white:#ffffff;
+      --font-disp:"Cormorant Garamond",serif;--font-ui:"Syne",sans-serif;--radius:2px;
+    }
+    body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:15px;line-height:1.6;overflow-x:hidden;cursor:none;}
+    .cursor-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+    .cursor-ring{width:36px;height:36px;border:1px solid rgba(200,169,110,.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s;}
+    .cursor-ring.expanded{width:56px;height:56px;border-color:var(--accent);}
+    @media(pointer:coarse){body{cursor:auto;}.cursor-dot,.cursor-ring{display:none;}}
+    body::before{content:"";position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-size:180px;pointer-events:none;z-index:1000;opacity:.35;}
 
-    <div id="lightbox">
-      <div id="lb-close">
-        <svg viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </div>
-      <div class="lb-media-wrap">
-        <button class="lb-btn" id="lb-prev">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
-        </button>
-        <img id="lb-img" src="" alt="" />
-        <video id="lb-video" controls playsinline></video>
-        <button class="lb-btn" id="lb-next">
-          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18" /></svg>
-        </button>
-        <div class="lb-caption">
-          <span id="lb-cat"></span>
-          <h4 id="lb-title"></h4>
-        </div>
-      </div>
-      <div class="lb-counter" id="lb-counter"></div>
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:24px 48px;background:linear-gradient(to bottom,rgba(9,9,9,.97) 0%,transparent 100%);}
+    .nav-logo{font-family:var(--font-disp);font-size:20px;font-weight:300;letter-spacing:.08em;color:var(--text);text-decoration:none;}
+    .nav-logo span{color:var(--accent);}
+    .nav-links{display:flex;gap:36px;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:11px;letter-spacing:.2em;text-transform:uppercase;transition:color .3s;}
+    .nav-links a:hover{color:var(--accent);}
+    .nav-right{display:flex;align-items:center;gap:16px;}
+
+    /* ── LANG SWITCHER ── */
+    .lang-switcher{display:flex;align-items:center;gap:4px;}
+    .lang-btn{background:none;border:1px solid var(--line);border-radius:var(--radius);padding:5px 9px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:border-color .25s,background .25s;font-family:var(--font-ui);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+    .lang-btn:hover{border-color:var(--accent);color:var(--accent);}
+    .lang-btn.active{border-color:var(--accent);background:rgba(200,169,110,.1);color:var(--accent);}
+    .lang-btn .flag{font-size:13px;line-height:1;}
+    /* Senyera mini SVG for Catalan */
+
+    /* ── HAMBURGER ── */
+    .nav-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:910;}
+    .nav-burger span{display:block;width:24px;height:1.5px;background:var(--text);transition:transform .3s,opacity .3s;}
+    .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+    .nav-burger.open span:nth-child(2){opacity:0;}
+    .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+    .nav-mobile{position:fixed;inset:0;background:rgba(9,9,9,.98);z-index:895;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;opacity:0;pointer-events:none;transition:opacity .3s;}
+    .nav-mobile.open{opacity:1;pointer-events:all;}
+    .nav-mobile a{font-family:var(--font-disp);font-size:clamp(32px,8vw,52px);font-weight:300;color:var(--text);text-decoration:none;letter-spacing:.04em;transition:color .2s;}
+    .nav-mobile a:hover{color:var(--accent);}
+    .nav-mobile .lang-switcher{margin-top:16px;}
+
+    /* ── HERO ── */
+    #hero{height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;position:relative;overflow:hidden;}
+    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 80% 20%,rgba(200,169,110,.07) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 20% 80%,rgba(139,107,61,.05) 0%,transparent 70%),var(--bg);}
+    .hero-line{position:absolute;top:0;left:48px;bottom:0;width:1px;background:var(--line);}
+    .hero-eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:0;animation:fadeUp .8s ease .3s forwards;}
+    .hero-name{font-family:var(--font-disp);font-size:clamp(60px,10vw,148px);font-weight:300;line-height:.9;letter-spacing:-.02em;color:var(--white);position:relative;z-index:1;opacity:0;animation:fadeUp 1s ease .5s forwards;}
+    .hero-name em{font-style:italic;color:var(--accent);}
+    .hero-sub{margin-top:28px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);max-width:380px;opacity:0;animation:fadeUp .8s ease .8s forwards;}
+    .hero-scroll{position:absolute;right:48px;bottom:80px;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;animation:fadeIn 1s ease 1.2s forwards;}
+    .hero-scroll span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;}
+    .scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+    @keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(.6)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    /* ── SECTIONS ── */
+    section{position:relative;}
+    .section-inner{max-width:1200px;margin:0 auto;padding:100px 48px;}
+    .section-label{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:16px;}
+    .section-label::after{content:"";height:1px;width:40px;background:var(--accent);opacity:.5;}
+    .section-title{font-family:var(--font-disp);font-size:clamp(36px,5vw,72px);font-weight:300;line-height:1.05;color:var(--white);margin-bottom:48px;}
+    .section-title em{font-style:italic;color:var(--accent);}
+    hr.divider{border:none;border-top:1px solid var(--line);margin:0;}
+
+    /* ── ABOUT ── */
+    #about{background:var(--bg);}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+    .about-bio{font-family:var(--font-disp);font-size:21px;font-weight:300;line-height:1.7;color:var(--text);}
+    .about-bio strong{color:var(--white);font-weight:400;}
+    .about-details{display:flex;flex-direction:column;gap:36px;}
+    .detail-group h4{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+    .tag-list{display:flex;flex-wrap:wrap;gap:8px;}
+    .tag{font-size:11px;letter-spacing:.1em;padding:6px 14px;border:1px solid var(--line);color:var(--muted);border-radius:var(--radius);transition:border-color .3s,color .3s;}
+    .tag:hover{border-color:var(--accent);color:var(--accent);}
+
+    /* ── PORTFOLIO ── */
+    #portfolio{background:var(--bg2);}
+    .portfolio-filter{display:flex;gap:4px;margin-bottom:44px;flex-wrap:wrap;}
+    .filter-btn{font-family:var(--font-ui);font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:8px 18px;background:transparent;border:1px solid var(--line);color:var(--muted);cursor:pointer;transition:all .25s;}
+    .filter-btn.active,.filter-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg);}
+    .portfolio-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:260px;gap:10px;}
+    .p-item{position:relative;overflow:hidden;background:var(--bg3);cursor:pointer;}
+    .p-item.wide{grid-column:span 7;}.p-item.mid{grid-column:span 5;}.p-item.third{grid-column:span 4;}.p-item.half{grid-column:span 6;}.p-item.full{grid-column:span 12;}
+    .p-item>iframe,.p-item>img,.p-item>video,.p-item>.p-placeholder{position:absolute;inset:0;width:100%;height:100%;}
+    .p-item>iframe{border:none;pointer-events:none;}
+    .p-item>img{object-fit:cover;display:block;transition:transform .6s cubic-bezier(.25,.46,.45,.94);}
+    .p-item>video{object-fit:cover;display:block;}
+    .p-item:hover>img{transform:scale(1.04);}
+    .p-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;border:1px dashed rgba(200,169,110,.2);}
+    .ph-icon{font-size:26px;opacity:.3;}.ph-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);opacity:.5;}.ph-hint{font-size:11px;color:var(--muted);max-width:200px;line-height:1.5;}
+    .p-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.05) 60%,transparent 100%);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;z-index:2;}
+    .p-item:hover .p-overlay{opacity:1;}
+    .p-overlay h3{font-family:var(--font-disp);font-size:20px;font-weight:300;color:var(--white);}
+    .p-overlay span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;display:block;}
+    .p-overlay small{font-size:11px;color:rgba(232,226,217,.55);margin-top:3px;display:block;}
+    .p-zoom{position:absolute;top:12px;right:12px;z-index:3;width:30px;height:30px;background:rgba(9,9,9,.75);border:1px solid rgba(200,169,110,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;}
+    .p-zoom svg{width:13px;height:13px;stroke:var(--accent);fill:none;stroke-width:2;}
+    .p-item:hover .p-zoom{opacity:1;}
+    .p-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2;}
+    .p-play-btn{width:56px;height:56px;border:2px solid rgba(255,255,255,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:border-color .3s,transform .3s;}
+    .p-play-btn svg{fill:white;width:18px;height:18px;margin-left:4px;}
+    .p-item:hover .p-play-btn{border-color:var(--accent);transform:scale(1.1);}
+    .grid-divider{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding:8px 0 4px;pointer-events:none;}
+    .grid-divider span{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);white-space:nowrap;font-family:var(--font-ui);}
+    .grid-divider::before,.grid-divider::after{content:"";flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(200,169,110,.3),transparent);}
+    .grid-divider::before{flex:0 0 0;}
+
+    /* ── CV ── */
+    #cv{background:var(--bg);}
+    .cv-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+    .cv-preview{position:relative;background:var(--bg3);border:1px solid var(--line);overflow:hidden;aspect-ratio:3/4;cursor:pointer;transition:border-color .3s;}
+    .cv-preview:hover{border-color:var(--accent);}
+    .cv-preview img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+    .cv-preview:hover img{transform:scale(1.02);}
+    .cv-preview-overlay{position:absolute;inset:0;background:rgba(9,9,9,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;}
+    .cv-preview:hover .cv-preview-overlay{opacity:1;}
+    .cv-preview-overlay span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--white);border:1px solid rgba(255,255,255,.5);padding:10px 20px;}
+    .cv-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center;}
+    .cv-placeholder p{font-size:11px;color:var(--muted);line-height:1.6;}
+    .cv-info .section-title{margin-bottom:20px;}
+    .cv-info>p{font-family:var(--font-disp);font-size:18px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:40px;}
+    .cv-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-bottom:40px;border:1px solid var(--line);}
+    .cv-stat{background:var(--bg);padding:20px;}
+    .cv-stat .num{font-family:var(--font-disp);font-size:36px;font-weight:300;color:var(--accent);line-height:1;}
+    .cv-stat .label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+    .cv-actions{display:flex;gap:12px;flex-wrap:wrap;}
+    .btn-primary{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--accent);color:var(--bg);font-family:var(--font-ui);font-size:11px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:background .25s,transform .2s;}
+    .btn-primary:hover{background:#d4b87a;transform:translateY(-2px);}
+    .btn-secondary{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:transparent;border:1px solid var(--line);color:var(--muted);font-family:var(--font-ui);font-size:11px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:border-color .25s,color .25s;}
+    .btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+    .btn-primary svg,.btn-secondary svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+
+    /* ── LIFE ── */
+    #life{background:var(--bg2);}
+    .life-tabs{display:flex;margin-bottom:44px;border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;}
+    .life-tab{font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:12px 24px;background:none;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .25s,border-color .25s;white-space:nowrap;}
+    .life-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+    .life-tab:hover{color:var(--text);}
+    .life-panel{display:none;}.life-panel.active{display:block;}
+    .photo-mosaic{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .photo-mosaic .ph-tall{grid-row:span 2;}
+    .photo-cell{background:var(--bg3);overflow:hidden;aspect-ratio:4/3;position:relative;cursor:pointer;}
+    .photo-cell.ph-tall{aspect-ratio:unset;}
+    .photo-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+    .photo-cell:hover img{transform:scale(1.05);}
+    .photo-cell.placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:1px dashed rgba(200,169,110,.2);padding:20px;text-align:center;cursor:default;}
+    .photo-cell.placeholder span{font-size:26px;opacity:.2;}.photo-cell.placeholder p{font-size:11px;color:var(--muted);letter-spacing:.1em;}
+
+    /* ── CONTACT ── */
+    #contact{background:var(--bg);}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+    .contact-left .section-title{margin-bottom:20px;}
+    .contact-left>p{font-family:var(--font-disp);font-size:18px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:44px;}
+    .contact-links{display:flex;flex-direction:column;gap:12px;}
+    .contact-link{display:flex;align-items:center;gap:16px;text-decoration:none;color:var(--text);padding:18px 22px;border:1px solid var(--line);transition:border-color .3s,background .3s;}
+    .contact-link:hover{border-color:var(--accent);background:rgba(200,169,110,.04);}
+    .cl-icon{width:40px;height:40px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:border-color .3s;}
+    .contact-link:hover .cl-icon{border-color:var(--accent);}
+    .cl-text{display:flex;flex-direction:column;}
+    .cl-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+    .cl-value{font-size:13px;color:var(--text);margin-top:2px;}
+    .cl-arrow{margin-left:auto;color:var(--muted);font-size:18px;transition:transform .3s,color .3s;}
+    .contact-link:hover .cl-arrow{transform:translate(4px,-4px);color:var(--accent);}
+    .contact-right{display:flex;align-items:center;justify-content:center;}
+    .contact-monogram{font-family:var(--font-disp);font-size:clamp(80px,12vw,180px);font-weight:300;font-style:italic;color:transparent;-webkit-text-stroke:1px rgba(200,169,110,.18);letter-spacing:-.05em;line-height:1;user-select:none;}
+
+    footer{padding:28px 48px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+    footer p{font-size:11px;letter-spacing:.1em;color:var(--muted);}
+    footer span{color:var(--accent);}
+
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* ── LIGHTBOX ── */
+    #lightbox{position:fixed;inset:0;z-index:9000;background:rgba(5,5,5,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+    #lightbox.open{opacity:1;pointer-events:all;}
+    .lb-media-wrap{position:relative;max-width:82vw;max-height:82vh;display:flex;align-items:center;justify-content:center;}
+    #lb-img{max-width:82vw;max-height:82vh;object-fit:contain;display:block;border:1px solid rgba(200,169,110,.1);transition:opacity .2s ease;}
+    #lb-img.hidden{display:none;}
+    #lb-video{max-width:82vw;max-height:82vh;display:none;outline:none;border:1px solid rgba(200,169,110,.1);background:#000;}
+    #lb-video.active{display:block;}
+    .lb-caption{position:absolute;bottom:-52px;left:0;right:0;text-align:center;}
+    .lb-caption h4{font-family:var(--font-disp);font-size:20px;font-weight:300;color:var(--white);}
+    .lb-caption span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);}
+    .lb-btn{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;background:rgba(9,9,9,.8);border:1px solid rgba(200,169,110,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .25s,background .25s;z-index:2;min-width:44px;min-height:44px;}
+    .lb-btn:hover{border-color:var(--accent);background:rgba(200,169,110,.1);}
+    .lb-btn svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:2;}
+    #lb-prev{left:-66px;}#lb-next{right:-66px;}
+    #lb-close{position:fixed;top:24px;right:28px;width:44px;height:44px;background:rgba(9,9,9,.8);border:1px solid rgba(200,169,110,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .25s;z-index:9001;}
+    #lb-close:hover{border-color:var(--accent);}
+    #lb-close svg{width:15px;height:15px;stroke:var(--text);fill:none;stroke-width:2;}
+    .lb-counter{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:7px;}
+    .lb-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);transition:background .2s,transform .2s;}
+    .lb-dot.active{background:var(--accent);transform:scale(1.4);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav{padding:18px 20px;}.nav-links{display:none;}.nav-burger{display:flex;}
+      .section-inner{padding:72px 20px;}#hero{padding:0 20px 60px;}.hero-line{left:20px;}.hero-scroll{display:none;}
+      .about-grid{grid-template-columns:1fr;gap:44px;}
+      .portfolio-grid{grid-template-columns:1fr 1fr;grid-auto-rows:200px;gap:6px;}
+      .p-item.wide,.p-item.mid,.p-item.third,.p-item.half{grid-column:span 1;}.p-item.full{grid-column:span 2;}
+      .cv-grid{grid-template-columns:1fr;gap:40px;}.cv-preview{aspect-ratio:unset;height:420px;}
+      .photo-mosaic{grid-template-columns:1fr 1fr;}.photo-mosaic .ph-tall{grid-row:span 2;}
+      .contact-grid{grid-template-columns:1fr;}.contact-right{display:none;}
+      footer{flex-direction:column;text-align:center;}
+      #lb-prev{left:6px;}#lb-next{right:6px;}#lb-img,#lb-video{max-width:94vw;max-height:75vh;}.lb-media-wrap{max-width:94vw;}.lb-caption{bottom:-44px;}
+      .lang-btn .lang-text{display:none;}
+    }
+    @media(max-width:480px){
+      .portfolio-grid{grid-template-columns:1fr;grid-auto-rows:220px;}
+      .p-item.wide,.p-item.mid,.p-item.third,.p-item.half,.p-item.full{grid-column:span 1;}
+      .photo-mosaic{grid-template-columns:1fr;}.photo-mosaic .ph-tall{grid-row:span 1;aspect-ratio:4/3;}
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox">
+    <div id="lb-close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    <div class="lb-media-wrap">
+      <button class="lb-btn" id="lb-prev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <img id="lb-img" src="" alt=""/>
+      <video id="lb-video" controls playsinline></video>
+      <button class="lb-btn" id="lb-next"><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button>
+      <div class="lb-caption"><span id="lb-cat"></span><h4 id="lb-title"></h4></div>
     </div>
+    <div class="lb-counter" id="lb-counter"></div>
+  </div>
 
-    <nav>
-      <a class="nav-logo" href="#hero">Deniz <span>Afsar</span></a>
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#portfolio">Work</a></li>
-        <li><a href="#cv">CV</a></li>
-        <li><a href="#life">Life</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button class="nav-burger" id="navBurger" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-    <div class="nav-mobile" id="navMobile">
-      <a href="#about" onclick="closeMenu()">About</a>
-      <a href="#portfolio" onclick="closeMenu()">Work</a>
-      <a href="#cv" onclick="closeMenu()">CV</a>
-      <a href="#life" onclick="closeMenu()">Life</a>
-      <a href="#contact" onclick="closeMenu()">Contact</a>
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">Deniz <span>Afsar</span></a>
+    <ul class="nav-links">
+      <li><a href="#about" data-i18n="nav.about">About</a></li>
+      <li><a href="#portfolio" data-i18n="nav.work">Work</a></li>
+      <li><a href="#cv">CV</a></li>
+      <li><a href="#life" data-i18n="nav.life">Life</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="en">
+          <span class="flag">🇬🇧</span><span class="lang-text">EN</span>
+        </button>
+        <button class="lang-btn" data-lang="es">
+          <span class="flag">🇪🇸</span><span class="lang-text">ES</span>
+        </button>
+      </div>
+      <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
+  </nav>
 
-    <section id="hero">
-      <div class="hero-bg"></div>
-      <div class="hero-line"></div>
-      <p class="hero-eyebrow">Video Editor · Content Creator · IB Student</p>
-      <h1 class="hero-name">Deniz<br /><em>Afsar</em></h1>
-      <p class="hero-sub">
-        Crafting visuals that speak — from raw footage to finished story.
-      </p>
-      <div class="hero-scroll">
-        <div class="scroll-line"></div>
-        <span>Scroll</span>
-      </div>
-    </section>
-    <hr class="divider" />
+  <div class="nav-mobile" id="navMobile">
+    <a href="#about" onclick="closeMenu()" data-i18n="nav.about">About</a>
+    <a href="#portfolio" onclick="closeMenu()" data-i18n="nav.work">Work</a>
+    <a href="#cv" onclick="closeMenu()">CV</a>
+    <a href="#life" onclick="closeMenu()" data-i18n="nav.life">Life</a>
+    <a href="#contact" onclick="closeMenu()" data-i18n="nav.contact">Contact</a>
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="en"><span class="flag">🇬🇧</span><span class="lang-text">EN</span></button>
+      <button class="lang-btn" data-lang="es"><span class="flag">🇪🇸</span><span class="lang-text">ES</span></button>
+    </div>
+  </div>
 
-    <section id="about">
-      <div class="section-inner">
-        <p class="section-label reveal">About me</p>
-        <div class="about-grid">
-          <div class="reveal">
-            <p class="about-bio">
-              I'm a <strong>17-year-old IB Diploma student</strong> based in
-              Barcelona with a deep interest in video production, visual
-              storytelling, and design. Whether I'm on the court for
-              <strong>CB Ribes</strong>, moderating at MUN, or spending 200
-              hours speaking English at <strong>Pueblo Inglés</strong> — I bring
-              the same energy to everything I do.
-            </p>
-          </div>
-          <div class="about-details reveal">
-            <div class="detail-group">
-              <h4>Tools</h4>
-              <div class="tag-list">
-                <span class="tag">Premiere Pro</span
-                ><span class="tag">After Effects</span
-                ><span class="tag">Photoshop</span
-                ><span class="tag">Blender</span>
-              </div>
-            </div>
-            <div class="detail-group">
-              <h4>Languages</h4>
-              <div class="tag-list">
-                <span class="tag">🇺🇸 Native English</span
-                ><span class="tag">🇹🇷 Native Turkish</span
-                ><span class="tag">🇪🇸 B2 Spanish</span>
-              </div>
-            </div>
-            <div class="detail-group">
-              <h4>Education</h4>
-              <div class="tag-list">
-                <span class="tag">IB Diploma — British College of Gavà</span
-                ><span class="tag">iGCSE Eng. Lang. &amp; Lit. — Grade 9</span>
-              </div>
-            </div>
-          </div>
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div><div class="hero-line"></div>
+    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Video Editor · Content Creator · IB Student</p>
+    <h1 class="hero-name">Deniz<br/><em>Afsar</em></h1>
+    <p class="hero-sub" data-i18n="hero.sub">Crafting visuals that speak — from raw footage to finished story.</p>
+    <div class="hero-scroll"><div class="scroll-line"></div><span data-i18n="hero.scroll">Scroll</span></div>
+  </section>
+  <hr class="divider"/>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <p class="section-label reveal" data-i18n="about.label">About me</p>
+      <div class="about-grid">
+        <div class="reveal">
+          <p class="about-bio" data-i18n-html="about.bio">I'm a <strong>17-year-old IB Diploma student</strong> based in Barcelona with a deep interest in video production, visual storytelling, and design. Whether I'm on the court for <strong>CB Ribes</strong>, moderating at MUN, or spending 200 hours speaking English at <strong>Pueblo Inglés</strong> — I bring the same energy to everything I do.</p>
+        </div>
+        <div class="about-details reveal">
+          <div class="detail-group"><h4 data-i18n="about.tools">Tools</h4><div class="tag-list"><span class="tag">Premiere Pro</span><span class="tag">After Effects</span><span class="tag">Photoshop</span><span class="tag">Blender</span></div></div>
+          <div class="detail-group"><h4 data-i18n="about.languages">Languages</h4><div class="tag-list"><span class="tag" data-i18n="about.lang1">🇺🇸 Native English</span><span class="tag" data-i18n="about.lang2">🇹🇷 Native Turkish</span><span class="tag" data-i18n="about.lang3">🇪🇸 B2 Spanish</span></div></div>
+          <div class="detail-group"><h4 data-i18n="about.education">Education</h4><div class="tag-list"><span class="tag">IB Diploma — British College of Gavà</span><span class="tag">iGCSE Eng. Lang. &amp; Lit. — Grade 9</span></div></div>
         </div>
       </div>
-    </section>
-    <hr class="divider" />
+    </div>
+  </section>
+  <hr class="divider"/>
 
-    <section id="portfolio">
-      <div class="section-inner">
-        <p class="section-label reveal">Selected Work</p>
-        <h2 class="section-title reveal">Videos &amp; <em>Design</em></h2>
-        <div class="portfolio-filter reveal">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="video">Video</button>
-          <button class="filter-btn" data-filter="design">Design</button>
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="section-inner">
+      <p class="section-label reveal" data-i18n="portfolio.label">Selected Work</p>
+      <h2 class="section-title reveal" data-i18n-html="portfolio.title">Videos &amp; <em>Design</em></h2>
+      <div class="portfolio-filter reveal">
+        <button class="filter-btn active" data-filter="all" data-i18n="filter.all">All</button>
+        <button class="filter-btn" data-filter="video" data-i18n="filter.video">Video</button>
+        <button class="filter-btn" data-filter="design" data-i18n="filter.design">Design</button>
+      </div>
+      <div class="portfolio-grid">
+
+        <!-- ① Christmas Short Film (wide) -->
+        <div class="p-item wide" data-type="video" data-vidindex="0">
+          <video autoplay muted loop playsinline><source src="https://www.dropbox.com/scl/fi/gh5hi6mspoz3abeomxchc/Christmas-Killer-SHORT-FILM.mp4?rlkey=wxppjfiz808v2d2ljjrwm2exq&st=js2gnfaj&raw=1" type="video/mp4"/></video>
+          <div class="p-overlay"><span data-i18n="cat.shortfilm">Short Film</span><h3>Christmas Killer</h3></div>
+          <div class="p-play"><div class="p-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
         </div>
-        <div class="portfolio-grid">
-          <div class="p-item wide" data-type="video" data-ytid="PbzjAYSKX5g">
-            <iframe
-              src="https://www.youtube.com/embed/PbzjAYSKX5g?autoplay=0&mute=1"
-              allowfullscreen
-            ></iframe>
-            <div class="p-overlay">
-              <span>Short Film</span>
-              <h3>Christmas Short Film</h3>
-            </div>
-            <div class="p-play">
-              <div class="p-play-btn">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-            </div>
+
+        <!-- ② Shirt Front (mid) -->
+        <div class="p-item mid" data-type="design" data-gallery="design" data-index="0">
+          <img src="" alt="CoinKids branded T-shirt front view"/>
+          <div class="p-overlay"><span data-i18n="cat.apparel">Apparel Design</span><h3>CoinKids T-Shirt</h3><small data-i18n="misc.front">Front</small></div>
+          <div class="p-zoom"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+        </div>
+
+        <!-- ③ Shirt Back (mid) -->
+        <div class="p-item mid" data-type="design" data-gallery="design" data-index="1">
+          <img src="" alt="CoinKids branded T-shirt back view"/>
+          <div class="p-overlay"><span data-i18n="cat.apparel">Apparel Design</span><h3>CoinKids T-Shirt</h3><small data-i18n="misc.back">Back</small></div>
+          <div class="p-zoom"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+        </div>
+
+        <!-- ④ CoinKids App (wide) -->
+        <div class="p-item wide" data-type="video" data-vidindex="1">
+          <video autoplay muted loop playsinline><source src="https://www.dropbox.com/scl/fi/h5s348mw42b3tj2itp3gu/Coinkids-App-Demo-FINAL.mp4?rlkey=imfxronuehtxqpixddufklveg&st=cjetjn65&raw=1" type="video/mp4"/></video>
+          <div class="p-overlay"><span data-i18n="cat.appdemo">App Demo</span><h3>CoinKids App</h3></div>
+          <div class="p-play"><div class="p-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+        </div>
+
+        <!-- ⑤⑥⑦ Posters -->
+        <div class="p-item third" data-type="design" data-gallery="design" data-index="2">
+          <img src="" alt="LaMelo Ball custom basketball poster design"/>
+          <div class="p-overlay"><span data-i18n="cat.poster">Poster Design</span><h3>LaMelo Ball</h3></div>
+          <div class="p-zoom"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+        </div>
+        <div class="p-item third" data-type="design" data-gallery="design" data-index="3">
+          <img src="" alt="LeBron James custom basketball poster design"/>
+          <div class="p-overlay"><span data-i18n="cat.poster">Poster Design</span><h3>LeBron James</h3></div>
+          <div class="p-zoom"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+        </div>
+        <div class="p-item third" data-type="design" data-gallery="design" data-index="4">
+          <img src="" alt="Ronaldo custom sports poster design"/>
+          <div class="p-overlay"><span data-i18n="cat.poster">Poster Design</span><h3>Ronaldo</h3></div>
+          <div class="p-zoom"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+        </div>
+
+        <!-- ⑧⑨ Blender -->
+        <div class="p-item half" data-type="video" data-vidindex="2">
+          <video autoplay muted loop playsinline><source src="https://www.dropbox.com/scl/fi/uyknbjku77irjczu4r6wr/It-s-Elmo-but-something-is-wrong....mp4?rlkey=4bkcekevcjyjhj5504pfx1uom&st=v7e5y7gn&raw=1" type="video/mp4"/></video>
+          <div class="p-overlay"><span data-i18n="cat.blender">3D / Blender</span><h3>Elmo but something's wrong...</h3></div>
+          <div class="p-play"><div class="p-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+        </div>
+        <div class="p-item half" data-type="video" data-vidindex="3">
+          <video autoplay muted loop playsinline><source src="https://www.dropbox.com/scl/fi/z68h8daqoquw4cp0eb506/Kermit-The-Frog-Dances-at-His-Nightclub.mp4?rlkey=6x1qiijf6ai3h8noaxq48e19j&st=ivx1vu9i&raw=1" type="video/mp4"/></video>
+          <div class="p-overlay"><span data-i18n="cat.blender">3D / Blender</span><h3>Kermit at His Nightclub</h3></div>
+          <div class="p-play"><div class="p-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+        </div>
+
+        <!-- AE SUBSECTION -->
+        <div class="grid-divider" data-type="video"><span data-i18n="portfolio.ae">After Effects Edits</span></div>
+
+        <!-- ⑩⑪⑫⑬ AE Edits -->
+        <div class="p-item half" data-type="video" data-vidindex="4">
+          <video autoplay muted loop playsinline><source src="https://www.dropbox.com/scl/fi/o0lei6xaim8ekhsz6oer2/Zion-was-a-beast-in-HS-shorts-nba-ballislife.mp4?rlkey=sp72iizya886l9ngmsixjzp72&st=ccr9mi32&raw=1" type="video/mp4"/></video>
+          <div class="p-overlay"><span data-i18n="cat.ae">After Effects Edit</span><h3>Zion — Beast in HS</h3></div>
+          <div class="p-play"><div class="p-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+        </div>
+        <div class="p-item half" data-type="video" data-vidindex="5">
+          <video autoplay muted loop playsinline><source src="https://www.dropbox.com/scl/fi/nzlsupb4vl5f13cedunyi/Lamelo-is-him-nba-basketball-edit-shorts.mp4?rlkey=o959yeqn979rzdhtppt3phqmc&st=3ra16him&raw=1" type="video/mp4"/></video>
+          <div class="p-overlay"><span data-i18n="cat.ae">After Effects Edit</span><h3>LaMelo is Him</h3></div>
+          <div class="p-play"><div class="p-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+        </div>
+        <div class="p-item half" data-type="video" data-vidindex="6">
+          <video autoplay muted loop playsinline><source src="https://www.dropbox.com/scl/fi/4pywh2xmk7kxn54t9a34i/Canada-s-BIGGEST-Menace-shorts-nba-basketball-mkiatipis.mp4?rlkey=ubmk66dqjwa44nyqbkcl4i7wo&st=bk4twcey&raw=1" type="video/mp4"/></video>
+          <div class="p-overlay"><span data-i18n="cat.ae">After Effects Edit</span><h3>Canada's Biggest Menace</h3></div>
+          <div class="p-play"><div class="p-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+        </div>
+        <div class="p-item half" data-type="video" data-vidindex="7">
+          <video autoplay muted loop playsinline><source src="https://www.dropbox.com/scl/fi/urme6tjq70cxqk9u6jhzt/ANTHONY-EDWARDS-EDIT-_-off-the-leash-_-4K.mp4?rlkey=kdy5w0fuzghsi97m53adaw8sz&st=ad9n3qy1&raw=1" type="video/mp4"/></video>
+          <div class="p-overlay"><span data-i18n="cat.ae">After Effects Edit</span><h3>Ant Edwards — Off the Leash</h3></div>
+          <div class="p-play"><div class="p-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <hr class="divider"/>
+
+  <!-- CV -->
+  <section id="cv">
+    <div class="section-inner">
+      <div class="cv-grid">
+        <div class="cv-preview reveal" id="cvPreviewBtn">
+          <div class="cv-placeholder">
+            <span class="ph-icon">📄</span>
+            <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);opacity:.6;" data-i18n="cv.preview">CV Preview</p>
+            <p data-i18n="cv.placeholder">Export your CV as a PNG, upload to Dropbox with raw=1, and replace this placeholder with an &lt;img&gt; tag.</p>
           </div>
-          <div
-            class="p-item mid"
-            data-type="design"
-            data-gallery="design"
-            data-index="0"
-          >
-            <img src="" alt="CoinKids branded T-shirt front view" />
-            <div class="p-overlay">
-              <span>Apparel Design</span>
-              <h3>CoinKids T-Shirt</h3>
-              <small>Front</small>
-            </div>
-            <div class="p-zoom">
-              <svg viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <line x1="11" y1="8" x2="11" y2="14" />
-                <line x1="8" y1="11" x2="14" y2="11" />
-              </svg>
-            </div>
+          <div class="cv-preview-overlay"><span data-i18n="cv.view">View Full CV</span></div>
+        </div>
+        <div class="cv-info reveal">
+          <p class="section-label" data-i18n="cv.label">Resume</p>
+          <h2 class="section-title" data-i18n-html="cv.title">Curriculum <em>Vitae</em></h2>
+          <p data-i18n="cv.desc">17 years old. IB Diploma student, video editor, content creator, and basketball player. Based in Barcelona — available for freelance work globally.</p>
+          <div class="cv-stats">
+            <div class="cv-stat"><div class="num">200+</div><div class="label" data-i18n="cv.stat1">Hours immersion</div></div>
+            <div class="cv-stat"><div class="num">9</div><div class="label" data-i18n="cv.stat2">iGCSE English grade</div></div>
+            <div class="cv-stat"><div class="num">3</div><div class="label" data-i18n="cv.stat3">Languages</div></div>
+            <div class="cv-stat"><div class="num">5+</div><div class="label" data-i18n="cv.stat4">Projects delivered</div></div>
           </div>
-          <div
-            class="p-item mid"
-            data-type="design"
-            data-gallery="design"
-            data-index="1"
-          >
-            <img src="" alt="CoinKids branded T-shirt back view" />
-            <div class="p-overlay">
-              <span>Apparel Design</span>
-              <h3>CoinKids T-Shirt</h3>
-              <small>Back</small>
-            </div>
-            <div class="p-zoom">
-              <svg viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <line x1="11" y1="8" x2="11" y2="14" />
-                <line x1="8" y1="11" x2="14" y2="11" />
-              </svg>
-            </div>
-          </div>
-          <div class="p-item wide" data-type="video" data-ytid="SR7mLspPcLg">
-            <iframe
-              src="https://www.youtube.com/embed/SR7mLspPcLg?autoplay=0&mute=1"
-              allowfullscreen
-            ></iframe>
-            <div class="p-overlay">
-              <span>App Demo</span>
-              <h3>CoinKids App</h3>
-            </div>
-            <div class="p-play">
-              <div class="p-play-btn">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div
-            class="p-item third"
-            data-type="design"
-            data-gallery="design"
-            data-index="2"
-          >
-            <img src="" alt="LaMelo Ball custom basketball poster design" />
-            <div class="p-overlay">
-              <span>Poster Design</span>
-              <h3>LaMelo Ball</h3>
-            </div>
-            <div class="p-zoom">
-              <svg viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <line x1="11" y1="8" x2="11" y2="14" />
-                <line x1="8" y1="11" x2="14" y2="11" />
-              </svg>
-            </div>
-          </div>
-          <div
-            class="p-item third"
-            data-type="design"
-            data-gallery="design"
-            data-index="3"
-          >
-            <img src="" alt="LeBron James custom basketball poster design" />
-            <div class="p-overlay">
-              <span>Poster Design</span>
-              <h3>LeBron James</h3>
-            </div>
-            <div class="p-zoom">
-              <svg viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <line x1="11" y1="8" x2="11" y2="14" />
-                <line x1="8" y1="11" x2="14" y2="11" />
-              </svg>
-            </div>
-          </div>
-          <div
-            class="p-item third"
-            data-type="design"
-            data-gallery="design"
-            data-index="4"
-          >
-            <img src="" alt="Ronaldo custom sports poster design" />
-            <div class="p-overlay">
-              <span>Poster Design</span>
-              <h3>Ronaldo</h3>
-            </div>
-            <div class="p-zoom">
-              <svg viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <line x1="11" y1="8" x2="11" y2="14" />
-                <line x1="8" y1="11" x2="14" y2="11" />
-              </svg>
-            </div>
-          </div>
-          <div class="p-item half" data-type="video" data-ytid="zOgiJ7EJQl4">
-            <iframe
-              src="https://www.youtube.com/embed/zOgiJ7EJQl4?autoplay=0&mute=1"
-              allowfullscreen
-            ></iframe>
-            <div class="p-overlay">
-              <span>3D / Blender</span>
-              <h3>Blender Render</h3>
-            </div>
-            <div class="p-play">
-              <div class="p-play-btn">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div class="p-item half" data-type="video" data-ytid="RIaN7O4Q7h8">
-            <iframe
-              src="https://www.youtube.com/embed/RIaN7O4Q7h8?autoplay=0&mute=1"
-              allowfullscreen
-            ></iframe>
-            <div class="p-overlay">
-              <span>3D / Blender</span>
-              <h3>Blender Render</h3>
-            </div>
-            <div class="p-play">
-              <div class="p-play-btn">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div
-            class="p-item half"
-            data-type="video"
-            data-gallery="bbedits"
-            data-index="0"
-          >
-            <video preload="metadata" muted playsinline loop>
-              <source
-                src="https://www.dropbox.com/scl/fi/o0lei6xaim8ekhsz6oer2/Zion-was-a-beast-in-HS-shorts-nba-ballislife.mp4?rlkey=sp72iizya886l9ngmsixjzp72&st=ccr9mi32&raw=1"
-                type="video/mp4"
-              />
-            </video>
-            <div class="p-overlay">
-              <span>After Effects Edit</span>
-              <h3>Zion — Beast in HS</h3>
-            </div>
-            <div class="p-play">
-              <div class="p-play-btn">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div
-            class="p-item half"
-            data-type="video"
-            data-gallery="bbedits"
-            data-index="1"
-          >
-            <video preload="metadata" muted playsinline loop>
-              <source
-                src="https://www.dropbox.com/scl/fi/nzlsupb4vl5f13cedunyi/Lamelo-is-him-nba-basketball-edit-shorts.mp4?rlkey=o959yeqn979rzdhtppt3phqmc&st=3ra16him&raw=1"
-                type="video/mp4"
-              />
-            </video>
-            <div class="p-overlay">
-              <span>After Effects Edit</span>
-              <h3>LaMelo is Him</h3>
-            </div>
-            <div class="p-play">
-              <div class="p-play-btn">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div
-            class="p-item half"
-            data-type="video"
-            data-gallery="bbedits"
-            data-index="2"
-          >
-            <video preload="metadata" muted playsinline loop>
-              <source
-                src="https://www.dropbox.com/scl/fi/4pywh2xmk7kxn54t9a34i/Canada-s-BIGGEST-Menace-shorts-nba-basketball-mkiatipis.mp4?rlkey=ubmk66dqjwa44nyqbkcl4i7wo&st=bk4twcey&raw=1"
-                type="video/mp4"
-              />
-            </video>
-            <div class="p-overlay">
-              <span>After Effects Edit</span>
-              <h3>Canada's Biggest Menace</h3>
-            </div>
-            <div class="p-play">
-              <div class="p-play-btn">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div
-            class="p-item half"
-            data-type="video"
-            data-gallery="bbedits"
-            data-index="3"
-          >
-            <video preload="metadata" muted playsinline loop>
-              <source
-                src="https://www.dropbox.com/scl/fi/urme6tjq70cxqk9u6jhzt/ANTHONY-EDWARDS-EDIT-_-off-the-leash-_-4K.mp4?rlkey=kdy5w0fuzghsi97m53adaw8sz&st=ad9n3qy1&raw=1"
-                type="video/mp4"
-              />
-            </video>
-            <div class="p-overlay">
-              <span>After Effects Edit</span>
-              <h3>Ant Edwards — Off the Leash</h3>
-            </div>
-            <div class="p-play">
-              <div class="p-play-btn">
-                <svg viewBox="0 0 24 24">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </div>
-            </div>
+          <div class="cv-actions">
+            <a class="btn-primary" href="#" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span data-i18n="cv.download">Download CV</span>
+            </a>
+            <a class="btn-secondary" href="https://www.linkedin.com/in/deniz-afsar-5981063a0/" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              LinkedIn
+            </a>
           </div>
         </div>
       </div>
-    </section>
-    <hr class="divider" />
+    </div>
+  </section>
+  <hr class="divider"/>
 
-    <section id="cv">
-      <div class="section-inner">
-        <div class="cv-grid">
-          <div class="cv-preview reveal" id="cvPreviewBtn">
-            <div class="cv-placeholder">
-              <span class="ph-icon">📄</span>
-              <p
-                style="
-                  font-size: 10px;
-                  letter-spacing: 0.2em;
-                  text-transform: uppercase;
-                  color: var(--accent);
-                  opacity: 0.6;
-                "
-              >
-                CV Preview
-              </p>
-              <p>
-                Export your CV as a PNG, upload to Dropbox with raw=1, and
-                replace this placeholder with an &lt;img&gt; tag.
-              </p>
-            </div>
-            <div class="cv-preview-overlay"><span>View Full CV</span></div>
+  <!-- LIFE -->
+  <section id="life">
+    <div class="section-inner">
+      <p class="section-label reveal" data-i18n="life.label">Beyond the screen</p>
+      <h2 class="section-title reveal" data-i18n-html="life.title">A Life <em>Lived</em></h2>
+      <div class="life-tabs reveal">
+        <button class="life-tab active" data-tab="bball" data-i18n="life.tab.bball">🏀 Basketball</button>
+        <button class="life-tab" data-tab="pueblo">🗣 Pueblo Inglés</button>
+        <button class="life-tab" data-tab="mun">🌍 MUN</button>
+      </div>
+      <div class="life-panels">
+        <div class="life-panel active" id="panel-bball">
+          <div class="photo-mosaic">
+            <div class="photo-cell ph-tall" data-gallery="bball" data-index="0"><img src="" alt="Deniz Afsar playing basketball for CB Ribes — portrait"/></div>
+            <div class="photo-cell" data-gallery="bball" data-index="1"><img src="" alt="Deniz Afsar basketball game action shot"/></div>
+            <div class="photo-cell" data-gallery="bball" data-index="2"><img src="" alt="Deniz Afsar basketball game photo"/></div>
+            <div class="photo-cell" data-gallery="bball" data-index="3"><img src="" alt="Deniz Afsar basketball action shot"/></div>
+            <div class="photo-cell" data-gallery="bball" data-index="4"><img src="" alt="Deniz Afsar CB Ribes basketball"/></div>
           </div>
-          <div class="cv-info reveal">
-            <p class="section-label">Resume</p>
-            <h2 class="section-title">Curriculum <em>Vitae</em></h2>
-            <p>
-              17 years old. IB Diploma student, video editor, content creator,
-              and basketball player. Based in Barcelona — available for
-              freelance work globally.
-            </p>
-            <div class="cv-stats">
-              <div class="cv-stat">
-                <div class="num">200+</div>
-                <div class="label">Hours immersion</div>
-              </div>
-              <div class="cv-stat">
-                <div class="num">9</div>
-                <div class="label">iGCSE English grade</div>
-              </div>
-              <div class="cv-stat">
-                <div class="num">3</div>
-                <div class="label">Languages</div>
-              </div>
-              <div class="cv-stat">
-                <div class="num">5+</div>
-                <div class="label">Projects delivered</div>
-              </div>
-            </div>
-            <div class="cv-actions">
-              <a class="btn-primary" href="#" target="_blank">
-                <svg viewBox="0 0 24 24">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Download CV
-              </a>
-              <a
-                class="btn-secondary"
-                href="https://www.linkedin.com/in/deniz-afsar-5981063a0/"
-                target="_blank"
-              >
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-                  />
-                  <rect x="2" y="9" width="4" height="12" />
-                  <circle cx="4" cy="4" r="2" />
-                </svg>
-                LinkedIn
-              </a>
-            </div>
+        </div>
+        <div class="life-panel" id="panel-pueblo">
+          <div class="photo-mosaic">
+            <div class="photo-cell ph-tall" data-gallery="pueblo" data-index="0"><img src="" alt="Deniz Afsar with Pueblo Inglés programme completion certificate"/></div>
+            <div class="photo-cell" data-gallery="pueblo" data-index="1"><img src="" alt="Pueblo Inglés volunteers and participants group photo"/></div>
+            <div class="photo-cell" data-gallery="pueblo" data-index="2"><img src="" alt="Pueblo Inglés volunteers group photo"/></div>
+            <div class="photo-cell" data-gallery="pueblo" data-index="3"><img src="" alt="Pueblo Inglés group activity photo"/></div>
+          </div>
+        </div>
+        <div class="life-panel" id="panel-mun">
+          <div class="photo-mosaic">
+            <div class="photo-cell ph-tall placeholder"><span>🌍</span><p data-i18n="mun.p1">MUN conference</p></div>
+            <div class="photo-cell placeholder"><span>🌍</span><p data-i18n="mun.p2">Speaking at the podium</p></div>
+            <div class="photo-cell placeholder"><span>🌍</span><p data-i18n="mun.p3">Committee session</p></div>
+            <div class="photo-cell placeholder"><span>🌍</span><p data-i18n="mun.p4">Delegates photo</p></div>
+            <div class="photo-cell placeholder"><span>🌍</span><p data-i18n="mun.p5">Another MUN moment</p></div>
           </div>
         </div>
       </div>
-    </section>
-    <hr class="divider" />
+    </div>
+  </section>
+  <hr class="divider"/>
 
-    <section id="life">
-      <div class="section-inner">
-        <p class="section-label reveal">Beyond the screen</p>
-        <h2 class="section-title reveal">A Life <em>Lived</em></h2>
-        <div class="life-tabs reveal">
-          <button class="life-tab active" data-tab="bball">
-            🏀 Basketball
-          </button>
-          <button class="life-tab" data-tab="pueblo">🗣 Pueblo Inglés</button>
-          <button class="life-tab" data-tab="mun">🌍 MUN</button>
-        </div>
-        <div class="life-panels">
-          <div class="life-panel active" id="panel-bball">
-            <div class="photo-mosaic">
-              <div
-                class="photo-cell ph-tall"
-                data-gallery="bball"
-                data-index="0"
-              >
-                <img
-                  src=""
-                  alt="Deniz Afsar playing basketball for CB Ribes — portrait"
-                />
-              </div>
-              <div class="photo-cell" data-gallery="bball" data-index="1">
-                <img src="" alt="Deniz Afsar basketball game action shot" />
-              </div>
-              <div class="photo-cell" data-gallery="bball" data-index="2">
-                <img src="" alt="Deniz Afsar basketball game photo" />
-              </div>
-              <div class="photo-cell" data-gallery="bball" data-index="3">
-                <img src="" alt="Deniz Afsar basketball action shot" />
-              </div>
-              <div class="photo-cell" data-gallery="bball" data-index="4">
-                <img src="" alt="Deniz Afsar CB Ribes basketball" />
-              </div>
-            </div>
-          </div>
-          <div class="life-panel" id="panel-pueblo">
-            <div class="photo-mosaic">
-              <div
-                class="photo-cell ph-tall"
-                data-gallery="pueblo"
-                data-index="0"
-              >
-                <img
-                  src=""
-                  alt="Deniz Afsar with Pueblo Inglés programme completion certificate"
-                />
-              </div>
-              <div class="photo-cell" data-gallery="pueblo" data-index="1">
-                <img
-                  src=""
-                  alt="Pueblo Inglés volunteers and participants group photo"
-                />
-              </div>
-              <div class="photo-cell" data-gallery="pueblo" data-index="2">
-                <img src="" alt="Pueblo Inglés volunteers group photo" />
-              </div>
-              <div class="photo-cell" data-gallery="pueblo" data-index="3">
-                <img src="" alt="Pueblo Inglés group activity photo" />
-              </div>
-            </div>
-          </div>
-          <div class="life-panel" id="panel-mun">
-            <div class="photo-mosaic">
-              <div class="photo-cell ph-tall placeholder">
-                <span>🌍</span>
-                <p>MUN conference</p>
-              </div>
-              <div class="photo-cell placeholder">
-                <span>🌍</span>
-                <p>Speaking at the podium</p>
-              </div>
-              <div class="photo-cell placeholder">
-                <span>🌍</span>
-                <p>Committee session</p>
-              </div>
-              <div class="photo-cell placeholder">
-                <span>🌍</span>
-                <p>Delegates photo</p>
-              </div>
-              <div class="photo-cell placeholder">
-                <span>🌍</span>
-                <p>Another MUN moment</p>
-              </div>
-            </div>
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-left reveal">
+          <p class="section-label" data-i18n="contact.label">Get in touch</p>
+          <h2 class="section-title" data-i18n-html="contact.title">Let's <em>Work</em><br/>Together</h2>
+          <p data-i18n="contact.desc">Open to freelance video and design projects, collaborations, and interesting conversations.</p>
+          <div class="contact-links">
+            <a class="contact-link" href="/cdn-cgi/l/email-protection#d0b4b5beb9aab1b6a3b1a2e190bfa5a4bcbfbfbbfeb3bfbd">
+              <div class="cl-icon">✉</div>
+              <div class="cl-text"><span class="cl-label" data-i18n="contact.email">Email</span><span class="cl-value"><span class="__cf_email__" data-cfemail="294d4c474053484f5a485b1869465c5d45464642074a4644">[email&#160;protected]</span></span></div>
+              <span class="cl-arrow">↗</span>
+            </a>
+            <a class="contact-link" href="https://www.linkedin.com/in/deniz-afsar-5981063a0/" target="_blank">
+              <div class="cl-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+              <div class="cl-text"><span class="cl-label">LinkedIn</span><span class="cl-value">Deniz Afsar</span></div>
+              <span class="cl-arrow">↗</span>
+            </a>
           </div>
         </div>
+        <div class="contact-right"><div class="contact-monogram">DA</div></div>
       </div>
-    </section>
-    <hr class="divider" />
+    </div>
+  </section>
 
-    <section id="contact">
-      <div class="section-inner">
-        <div class="contact-grid">
-          <div class="contact-left reveal">
-            <p class="section-label">Get in touch</p>
-            <h2 class="section-title">Let's <em>Work</em><br />Together</h2>
-            <p>
-              Open to freelance video and design projects, collaborations, and
-              interesting conversations.
-            </p>
-            <div class="contact-links">
-              <a class="contact-link" href="mailto:denizafsar1@outlook.com">
-                <div class="cl-icon">✉</div>
-                <div class="cl-text">
-                  <span class="cl-label">Email</span
-                  ><span class="cl-value">denizafsar1@outlook.com</span>
-                </div>
-                <span class="cl-arrow">↗</span>
-              </a>
-              <a
-                class="contact-link"
-                href="https://www.linkedin.com/in/deniz-afsar-5981063a0/"
-                target="_blank"
-              >
-                <div class="cl-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-                    />
-                    <rect x="2" y="9" width="4" height="12" />
-                    <circle cx="4" cy="4" r="2" />
-                  </svg>
-                </div>
-                <div class="cl-text">
-                  <span class="cl-label">LinkedIn</span
-                  ><span class="cl-value">Deniz Afsar</span>
-                </div>
-                <span class="cl-arrow">↗</span>
-              </a>
-            </div>
-          </div>
-          <div class="contact-right">
-            <div class="contact-monogram">DA</div>
-          </div>
-        </div>
-      </div>
-    </section>
+  <footer>
+    <p>© 2026 <span>Deniz Afsar</span></p>
+    <p data-i18n="footer.made">Made with too much free time and After Effects</p>
+  </footer>
 
-    <footer>
-      <p>© 2026 <span>Deniz Afsar</span>. All rights reserved.</p>
-    </footer>
-
-    <script>
-      function cdn(url, w) {
-        return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${w || 900}&q=85&output=webp`;
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    /* ══════════════════════════════════════════════════
+       TRANSLATIONS
+    ══════════════════════════════════════════════════ */
+    const T = {
+      en: {
+        'nav.about':'About','nav.work':'Work','nav.life':'Life','nav.contact':'Contact',
+        'hero.eyebrow':'Video Editor · Content Creator · IB Student',
+        'hero.sub':'Crafting visuals that speak — from raw footage to finished story.',
+        'hero.scroll':'Scroll',
+        'about.label':'About me',
+        'about.bio':'I\'m a <strong>17-year-old IB Diploma student</strong> based in Barcelona with a deep interest in video production, visual storytelling, and design. Whether I\'m on the court for <strong>CB Ribes</strong>, moderating at MUN, or spending 200 hours speaking English at <strong>Pueblo Inglés</strong> — I bring the same energy to everything I do.',
+        'about.tools':'Tools','about.languages':'Languages','about.education':'Education',
+        'about.lang1':'🇺🇸 Native English','about.lang2':'🇹🇷 Native Turkish','about.lang3':'🇪🇸 B2 Spanish',
+        'portfolio.label':'Selected Work','portfolio.title':'Videos &amp; <em>Design</em>','portfolio.ae':'After Effects Edits',
+        'filter.all':'All','filter.video':'Video','filter.design':'Design',
+        'cat.shortfilm':'Short Film','cat.apparel':'Apparel Design','cat.appdemo':'App Demo',
+        'cat.poster':'Poster Design','cat.blender':'3D / Blender','cat.ae':'After Effects Edit',
+        'misc.front':'Front','misc.back':'Back',
+        'cv.label':'Resume','cv.title':'Curriculum <em>Vitae</em>',
+        'cv.desc':'17 years old. IB Diploma student, video editor, content creator, and basketball player. Based in Barcelona — available for freelance work globally.',
+        'cv.stat1':'Hours immersion','cv.stat2':'iGCSE English grade','cv.stat3':'Languages','cv.stat4':'Projects delivered',
+        'cv.download':'Download CV','cv.view':'View Full CV','cv.preview':'CV Preview',
+        'cv.placeholder':'Export your CV as a PNG, upload to Dropbox with raw=1, and replace this placeholder with an &lt;img&gt; tag.',
+        'life.label':'Beyond the screen','life.title':'A Life <em>Lived</em>',
+        'life.tab.bball':'🏀 Basketball',
+        'mun.p1':'MUN conference','mun.p2':'Speaking at the podium','mun.p3':'Committee session','mun.p4':'Delegates photo','mun.p5':'Another MUN moment',
+        'contact.label':'Get in touch','contact.title':'Let\'s <em>Work</em><br/>Together',
+        'contact.desc':'Open to freelance video and design projects, collaborations, and interesting conversations.',
+        'contact.email':'Email',
+        'footer.made':'Made with too much free time and After Effects',
+      },
+      es: {
+        'nav.about':'Sobre mí','nav.work':'Trabajo','nav.life':'Vida','nav.contact':'Contacto',
+        'hero.eyebrow':'Editor de Vídeo · Creador de Contenido · Estudiante IB',
+        'hero.sub':'Creando visuales que hablan — del metraje en bruto a la historia acabada.',
+        'hero.scroll':'Bajar',
+        'about.label':'Sobre mí',
+        'about.bio':'Soy un <strong>estudiante de Bachillerato IB de 17 años</strong> basado en Barcelona con una gran pasión por la producción de vídeo, la narrativa visual y el diseño. Ya sea en la cancha con el <strong>CB Ribes</strong>, moderando en MUN, o completando 200 horas de inglés en <strong>Pueblo Inglés</strong> — pongo la misma energía en todo lo que hago.',
+        'about.tools':'Herramientas','about.languages':'Idiomas','about.education':'Educación',
+        'about.lang1':'🇺🇸 Inglés nativo','about.lang2':'🇹🇷 Turco nativo','about.lang3':'🇪🇸 Español B2',
+        'portfolio.label':'Trabajos seleccionados','portfolio.title':'Vídeos y <em>Diseño</em>','portfolio.ae':'Ediciones After Effects',
+        'filter.all':'Todos','filter.video':'Vídeo','filter.design':'Diseño',
+        'cat.shortfilm':'Cortometraje','cat.apparel':'Diseño de Ropa','cat.appdemo':'Demo de App',
+        'cat.poster':'Diseño de Póster','cat.blender':'3D / Blender','cat.ae':'Edición After Effects',
+        'misc.front':'Frontal','misc.back':'Trasera',
+        'cv.label':'Currículum','cv.title':'Currículum <em>Vítae</em>',
+        'cv.desc':'17 años. Estudiante de IB Diploma, editor de vídeo, creador de contenido y jugador de baloncesto. Basado en Barcelona — disponible para proyectos freelance a nivel global.',
+        'cv.stat1':'Horas de inmersión','cv.stat2':'Nota iGCSE inglés','cv.stat3':'Idiomas','cv.stat4':'Proyectos entregados',
+        'cv.download':'Descargar CV','cv.view':'Ver CV completo','cv.preview':'Vista previa del CV',
+        'cv.placeholder':'Exporta tu CV como PNG, súbelo a Dropbox con raw=1 y reemplaza este marcador con una etiqueta &lt;img&gt;.',
+        'life.label':'Más allá de la pantalla','life.title':'Una Vida <em>Vivida</em>',
+        'life.tab.bball':'🏀 Baloncesto',
+        'mun.p1':'Conferencia MUN','mun.p2':'Hablando en el podio','mun.p3':'Sesión de comité','mun.p4':'Foto de delegados','mun.p5':'Otro momento MUN',
+        'contact.label':'Contáctame','contact.title':'Trabajemos <em>Juntos</em>',
+        'contact.desc':'Abierto a proyectos freelance de vídeo y diseño, colaboraciones y conversaciones interesantes.',
+        'contact.email':'Correo',
+        'footer.made':'Hecho con demasiado tiempo libre y After Effects',
       }
+    };
+    let currentLang = localStorage.getItem('lang') || 'en';
 
-      const RAW = {
-        shirtFront:
-          "https://www.dropbox.com/scl/fi/msbqnmxzapv4wehjx9yam/coinkids-shirt-png-front-with-shirt.png?rlkey=2ogx6dezefdjfwbesu0svh9a4&st=1uxayxnh&raw=1",
-        shirtBack:
-          "https://www.dropbox.com/scl/fi/bwzs3lbtg7ojjgteb90qa/coinkids-shirt-png-with-back.png?rlkey=saves961pbshfle289eur07no&st=j369z34n&raw=1",
-        lamelo:
-          "https://www.dropbox.com/scl/fi/8novf7ioooy34i2gnn3ee/lamelo-ball-poster-BY-ME.png?rlkey=ayj59a6m32phh33dveo0q4ozu&st=xhfj7gz2&raw=1",
-        lebron:
-          "https://www.dropbox.com/scl/fi/4tviux1136720kebq8td9/Lebron-Poster.png?rlkey=qcm0v21epk2pw9tkhm87v3wrn&st=y0tz8px3&raw=1",
-        ronaldo:
-          "https://www.dropbox.com/scl/fi/n12nl6e4k2t24bh1vnh17/trae-young-poster-finished.png?rlkey=u0rrl3h1kxeirncnmtikkvj3l&st=hiz2mcyo&raw=1",
-        pueblo1:
-          "https://www.dropbox.com/scl/fi/7evuoscjn7jb8el8xabcn/IMG_2827.JPEG?rlkey=k7se16b0ea4l9a2t05304ki6s&st=0ybh0w9l&raw=1",
-        pueblo2:
-          "https://www.dropbox.com/scl/fi/g49lbp4opgga3kd9221gh/IMG_2856.JPEG?rlkey=nd76qu0anpcbxwcprpeffs80s&st=dwjfawtl&raw=1",
-        pueblo3:
-          "https://www.dropbox.com/scl/fi/yqi1h384e0b9iwy0t6hty/IMG_4458.JPEG?rlkey=ld5cbyou44etvypsvuz75udoi&st=4q4kxosa&raw=1",
-        pueblo4:
-          "https://www.dropbox.com/scl/fi/sycvydit0u9g7u0kj65fp/puebloingles4.jpeg?rlkey=s0nkoyz3vp45vnk4fcxoqun7d&st=0zidh2fh&raw=1",
-        bball1:
-          "https://www.dropbox.com/scl/fi/28h9lgcdds758iqcyr74c/c61a6c1c-2ca8-44cb-9877-51fe4d98bd2e.jpg?rlkey=yao099trqvoyecf7ho688nq1y&st=t36io06y&raw=1",
-        bball2:
-          "https://www.dropbox.com/scl/fi/b1gnfgnv25h8xz2br47oq/80bffbe7-0517-4883-9f9a-1ff1be5e2609.jpg?rlkey=7d9ce0gfdqpkgvxfkbv7wrmnx&st=zzipn38r&raw=1",
-        bball3:
-          "https://www.dropbox.com/scl/fi/mf0stmslbvytyliw4pnk9/8f51ba30-ec18-4e65-ab09-b6c5da9f8b4c.jpg?rlkey=d0zfqrmqlwunike37dbtj3m2x&st=1pttmlzv&raw=1",
-        bball4:
-          "https://www.dropbox.com/scl/fi/xswq1x4joiatkni6jwr6w/2a4efcbd-a336-408b-a0f0-c15eb0ae4e5d.jpg?rlkey=pl8tencgesv6t2faswd7b7pco&st=rfdnxtiy&raw=1",
-        bball5:
-          "https://www.dropbox.com/scl/fi/0fvmzspk83v3uyggd9vgp/WhatsApp-Image-2026-03-24-at-19.34.05.jpeg?rlkey=2uzy26032d4k9lneqraqw2s0j&st=6a4lizzs&raw=1",
-      };
+    function applyLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('lang', lang);
+      const strings = T[lang];
+      document.documentElement.lang = lang;
 
-      const VIDRAW = {
-        0: {
-          src: "https://www.dropbox.com/scl/fi/o0lei6xaim8ekhsz6oer2/Zion-was-a-beast-in-HS-shorts-nba-ballislife.mp4?rlkey=sp72iizya886l9ngmsixjzp72&st=ccr9mi32&raw=1",
-          title: "Zion — Beast in HS",
-          cat: "After Effects Edit",
-        },
-        1: {
-          src: "https://www.dropbox.com/scl/fi/nzlsupb4vl5f13cedunyi/Lamelo-is-him-nba-basketball-edit-shorts.mp4?rlkey=o959yeqn979rzdhtppt3phqmc&st=3ra16him&raw=1",
-          title: "LaMelo is Him",
-          cat: "After Effects Edit",
-        },
-        2: {
-          src: "https://www.dropbox.com/scl/fi/4pywh2xmk7kxn54t9a34i/Canada-s-BIGGEST-Menace-shorts-nba-basketball-mkiatipis.mp4?rlkey=ubmk66dqjwa44nyqbkcl4i7wo&st=bk4twcey&raw=1",
-          title: "Canada's Biggest Menace",
-          cat: "After Effects Edit",
-        },
-        3: {
-          src: "https://www.dropbox.com/scl/fi/urme6tjq70cxqk9u6jhzt/ANTHONY-EDWARDS-EDIT-_-off-the-leash-_-4K.mp4?rlkey=kdy5w0fuzghsi97m53adaw8sz&st=ad9n3qy1&raw=1",
-          title: "Ant Edwards — Off the Leash",
-          cat: "After Effects Edit",
-        },
-      };
-
-      const GALLERIES = {
-        design: [
-          {
-            src: RAW.shirtFront,
-            alt: "CoinKids T-shirt front",
-            title: "CoinKids T-Shirt",
-            cat: "Apparel Design",
-          },
-          {
-            src: RAW.shirtBack,
-            alt: "CoinKids T-shirt back",
-            title: "CoinKids T-Shirt",
-            cat: "Apparel Design — Back",
-          },
-          {
-            src: RAW.lamelo,
-            alt: "LaMelo poster",
-            title: "LaMelo Ball",
-            cat: "Poster Design",
-          },
-          {
-            src: RAW.lebron,
-            alt: "LeBron poster",
-            title: "LeBron James",
-            cat: "Poster Design",
-          },
-          {
-            src: RAW.ronaldo,
-            alt: "Ronaldo poster",
-            title: "Ronaldo",
-            cat: "Poster Design",
-          },
-        ],
-        pueblo: [
-          {
-            src: RAW.pueblo1,
-            alt: "Pueblo Inglés certificate",
-            title: "Programme Certificate",
-            cat: "Pueblo Inglés",
-          },
-          {
-            src: RAW.pueblo2,
-            alt: "Pueblo Inglés volunteers",
-            title: "Volunteers Group",
-            cat: "Pueblo Inglés",
-          },
-          {
-            src: RAW.pueblo3,
-            alt: "Pueblo Inglés group",
-            title: "Volunteers Group",
-            cat: "Pueblo Inglés",
-          },
-          {
-            src: RAW.pueblo4,
-            alt: "Pueblo Inglés group activity",
-            title: "Group Activity",
-            cat: "Pueblo Inglés",
-          },
-        ],
-        bball: [
-          {
-            src: RAW.bball1,
-            alt: "Deniz playing basketball",
-            title: "CB Ribes",
-            cat: "Basketball",
-          },
-          {
-            src: RAW.bball2,
-            alt: "Basketball game action",
-            title: "CB Ribes",
-            cat: "Basketball",
-          },
-          {
-            src: RAW.bball3,
-            alt: "Basketball game photo",
-            title: "CB Ribes",
-            cat: "Basketball",
-          },
-          {
-            src: RAW.bball4,
-            alt: "Basketball action",
-            title: "CB Ribes",
-            cat: "Basketball",
-          },
-          {
-            src: RAW.bball5,
-            alt: "Basketball photo",
-            title: "CB Ribes",
-            cat: "Basketball",
-          },
-        ],
-      };
-
-      const IMG_SELECTORS = {
-        '.p-item[data-index="0"] img': cdn(RAW.shirtFront, 900),
-        '.p-item[data-index="1"] img': cdn(RAW.shirtBack, 900),
-        '.p-item[data-index="2"] img': cdn(RAW.lamelo, 900),
-        '.p-item[data-index="3"] img': cdn(RAW.lebron, 900),
-        '.p-item[data-index="4"] img': cdn(RAW.ronaldo, 900),
-        '.photo-cell[data-index="0"][data-gallery="pueblo"] img': cdn(
-          RAW.pueblo1,
-          900,
-        ),
-        '.photo-cell[data-index="1"][data-gallery="pueblo"] img': cdn(
-          RAW.pueblo2,
-          900,
-        ),
-        '.photo-cell[data-index="2"][data-gallery="pueblo"] img': cdn(
-          RAW.pueblo3,
-          900,
-        ),
-        '.photo-cell[data-index="3"][data-gallery="pueblo"] img': cdn(
-          RAW.pueblo4,
-          900,
-        ),
-        '.photo-cell[data-index="0"][data-gallery="bball"] img': cdn(
-          RAW.bball1,
-          900,
-        ),
-        '.photo-cell[data-index="1"][data-gallery="bball"] img': cdn(
-          RAW.bball2,
-          900,
-        ),
-        '.photo-cell[data-index="2"][data-gallery="bball"] img': cdn(
-          RAW.bball3,
-          900,
-        ),
-        '.photo-cell[data-index="3"][data-gallery="bball"] img': cdn(
-          RAW.bball4,
-          900,
-        ),
-        '.photo-cell[data-index="4"][data-gallery="bball"] img': cdn(
-          RAW.bball5,
-          900,
-        ),
-      };
-      for (const [sel, src] of Object.entries(IMG_SELECTORS)) {
-        const el = document.querySelector(sel);
-        if (el) el.src = src;
-      }
-
-      function preloadImg(url) {
-        const i = new Image();
-        i.src = cdn(url, 1600);
-      }
-
-      const burger = document.getElementById("navBurger"),
-        navMobile = document.getElementById("navMobile");
-      burger.addEventListener("click", () => {
-        burger.classList.toggle("open");
-        navMobile.classList.toggle("open");
-        document.body.style.overflow = navMobile.classList.contains("open")
-          ? "hidden"
-          : "";
+      // Plain text
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (strings[key] !== undefined) el.textContent = strings[key];
       });
-      function closeMenu() {
-        burger.classList.remove("open");
-        navMobile.classList.remove("open");
-        document.body.style.overflow = "";
-      }
-
-      const dot = document.getElementById("cursorDot"),
-        ring = document.getElementById("cursorRing");
-      if (dot && ring) {
-        document.addEventListener("mousemove", (e) => {
-          dot.style.left = e.clientX + "px";
-          dot.style.top = e.clientY + "px";
-          ring.style.left = e.clientX + "px";
-          ring.style.top = e.clientY + "px";
-        });
-        document
-          .querySelectorAll(
-            "a,button,.p-item,.photo-cell:not(.placeholder),#lb-close",
-          )
-          .forEach((el) => {
-            el.addEventListener("mouseenter", () =>
-              ring.classList.add("expanded"),
-            );
-            el.addEventListener("mouseleave", () =>
-              ring.classList.remove("expanded"),
-            );
-          });
-      }
-
-      const ro = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("visible");
-          });
-        },
-        { threshold: 0.12 },
-      );
-      document.querySelectorAll(".reveal").forEach((el) => ro.observe(el));
-
-      document.querySelectorAll(".filter-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document
-            .querySelectorAll(".filter-btn")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          const f = btn.dataset.filter;
-          document.querySelectorAll(".p-item").forEach((item) => {
-            item.style.display =
-              f === "all" || item.dataset.type === f ? "" : "none";
-          });
-        });
+      // HTML content (for em tags etc)
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (strings[key] !== undefined) el.innerHTML = strings[key];
       });
 
-      document.querySelectorAll(".p-item video").forEach((vid) => {
-        const item = vid.closest(".p-item");
-        item.addEventListener("mouseenter", () => vid.play().catch(() => {}));
-        item.addEventListener("mouseleave", () => {
-          vid.pause();
-          vid.currentTime = 0;
-        });
+      // Update active button state across all switchers
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
       });
+    }
 
-      document.querySelectorAll(".life-tab").forEach((tab) => {
-        tab.addEventListener("click", () => {
-          document
-            .querySelectorAll(".life-tab")
-            .forEach((t) => t.classList.remove("active"));
-          document
-            .querySelectorAll(".life-panel")
-            .forEach((p) => p.classList.remove("active"));
-          tab.classList.add("active");
-          document
-            .getElementById("panel-" + tab.dataset.tab)
-            .classList.add("active");
-        });
-      });
+    // Attach lang switcher clicks
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+    });
 
-      let curGallery = [],
-        curIndex = 0;
-      const lb = document.getElementById("lightbox"),
-        lbImg = document.getElementById("lb-img"),
-        lbVid = document.getElementById("lb-video"),
-        lbTitle = document.getElementById("lb-title"),
-        lbCat = document.getElementById("lb-cat"),
-        lbDots = document.getElementById("lb-counter");
+    // Apply on load
+    applyLang(currentLang);
 
-      function renderDots(arr, idx) {
-        lbDots.innerHTML = arr
-          .map(
-            (_, i) => `<div class="lb-dot${i === idx ? " active" : ""}"></div>`,
-          )
-          .join("");
-      }
+    /* ══════════════════════════════════════════════════
+       IMAGE / VIDEO DATA
+    ══════════════════════════════════════════════════ */
+    function cdn(url,w){ return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${w||900}&q=85&output=webp`; }
 
-      function showImageSlide(idx) {
-        const item = curGallery[idx];
-        lbImg.classList.remove("hidden");
-        lbImg.style.opacity = "0";
-        lbVid.classList.remove("active");
-        lbVid.pause();
-        lbVid.src = "";
-        setTimeout(() => {
-          lbImg.src = cdn(item.src, 1600);
-          lbImg.alt = item.alt;
-          lbTitle.textContent = item.title;
-          lbCat.textContent = item.cat;
-          renderDots(curGallery, idx);
-          lbImg.onload = () => {
-            lbImg.style.opacity = "1";
-          };
-          if (lbImg.complete) lbImg.style.opacity = "1";
-        }, 180);
-        const prev =
-            curGallery[(idx - 1 + curGallery.length) % curGallery.length],
-          next = curGallery[(idx + 1) % curGallery.length];
-        preloadImg(prev.src);
-        preloadImg(next.src);
-      }
+    const RAW = {
+      shirtFront:'https://www.dropbox.com/scl/fi/msbqnmxzapv4wehjx9yam/coinkids-shirt-png-front-with-shirt.png?rlkey=2ogx6dezefdjfwbesu0svh9a4&st=1uxayxnh&raw=1',
+      shirtBack: 'https://www.dropbox.com/scl/fi/bwzs3lbtg7ojjgteb90qa/coinkids-shirt-png-with-back.png?rlkey=saves961pbshfle289eur07no&st=j369z34n&raw=1',
+      lamelo:    'https://www.dropbox.com/scl/fi/8novf7ioooy34i2gnn3ee/lamelo-ball-poster-BY-ME.png?rlkey=ayj59a6m32phh33dveo0q4ozu&st=xhfj7gz2&raw=1',
+      lebron:    'https://www.dropbox.com/scl/fi/4tviux1136720kebq8td9/Lebron-Poster.png?rlkey=qcm0v21epk2pw9tkhm87v3wrn&st=y0tz8px3&raw=1',
+      ronaldo:   'https://www.dropbox.com/scl/fi/n12nl6e4k2t24bh1vnh17/trae-young-poster-finished.png?rlkey=u0rrl3h1kxeirncnmtikkvj3l&st=hiz2mcyo&raw=1',
+      pueblo1:   'https://www.dropbox.com/scl/fi/7evuoscjn7jb8el8xabcn/IMG_2827.JPEG?rlkey=k7se16b0ea4l9a2t05304ki6s&st=0ybh0w9l&raw=1',
+      pueblo2:   'https://www.dropbox.com/scl/fi/g49lbp4opgga3kd9221gh/IMG_2856.JPEG?rlkey=nd76qu0anpcbxwcprpeffs80s&st=dwjfawtl&raw=1',
+      pueblo3:   'https://www.dropbox.com/scl/fi/yqi1h384e0b9iwy0t6hty/IMG_4458.JPEG?rlkey=ld5cbyou44etvypsvuz75udoi&st=4q4kxosa&raw=1',
+      pueblo4:   'https://www.dropbox.com/scl/fi/sycvydit0u9g7u0kj65fp/puebloingles4.jpeg?rlkey=s0nkoyz3vp45vnk4fcxoqun7d&st=0zidh2fh&raw=1',
+      bball1:    'https://www.dropbox.com/scl/fi/28h9lgcdds758iqcyr74c/c61a6c1c-2ca8-44cb-9877-51fe4d98bd2e.jpg?rlkey=yao099trqvoyecf7ho688nq1y&st=t36io06y&raw=1',
+      bball2:    'https://www.dropbox.com/scl/fi/b1gnfgnv25h8xz2br47oq/80bffbe7-0517-4883-9f9a-1ff1be5e2609.jpg?rlkey=7d9ce0gfdqpkgvxfkbv7wrmnx&st=zzipn38r&raw=1',
+      bball3:    'https://www.dropbox.com/scl/fi/mf0stmslbvytyliw4pnk9/8f51ba30-ec18-4e65-ab09-b6c5da9f8b4c.jpg?rlkey=d0zfqrmqlwunike37dbtj3m2x&st=1pttmlzv&raw=1',
+      bball4:    'https://www.dropbox.com/scl/fi/xswq1x4joiatkni6jwr6w/2a4efcbd-a336-408b-a0f0-c15eb0ae4e5d.jpg?rlkey=pl8tencgesv6t2faswd7b7pco&st=rfdnxtiy&raw=1',
+      bball5:    'https://www.dropbox.com/scl/fi/0fvmzspk83v3uyggd9vgp/WhatsApp-Image-2026-03-24-at-19.34.05.jpeg?rlkey=2uzy26032d4k9lneqraqw2s0j&st=6a4lizzs&raw=1',
+    };
 
-      function showVideoSlide(idx) {
-        const item = VIDRAW[idx];
-        lbImg.classList.add("hidden");
-        lbVid.classList.add("active");
-        lbVid.src = item.src;
-        lbTitle.textContent = item.title;
-        lbCat.textContent = item.cat;
-        renderDots(Object.values(VIDRAW), idx);
-        lbVid.play().catch(() => {});
-      }
+    const VIDRAW = [
+      {src:'https://www.dropbox.com/scl/fi/gh5hi6mspoz3abeomxchc/Christmas-Killer-SHORT-FILM.mp4?rlkey=wxppjfiz808v2d2ljjrwm2exq&st=js2gnfaj&raw=1', title:'Christmas Killer', cat:'Short Film'},
+      {src:'https://www.dropbox.com/scl/fi/h5s348mw42b3tj2itp3gu/Coinkids-App-Demo-FINAL.mp4?rlkey=imfxronuehtxqpixddufklveg&st=cjetjn65&raw=1', title:'CoinKids App Demo', cat:'App Demo'},
+      {src:'https://www.dropbox.com/scl/fi/uyknbjku77irjczu4r6wr/It-s-Elmo-but-something-is-wrong....mp4?rlkey=4bkcekevcjyjhj5504pfx1uom&st=v7e5y7gn&raw=1', title:"Elmo but something's wrong...", cat:'3D / Blender'},
+      {src:'https://www.dropbox.com/scl/fi/z68h8daqoquw4cp0eb506/Kermit-The-Frog-Dances-at-His-Nightclub.mp4?rlkey=6x1qiijf6ai3h8noaxq48e19j&st=ivx1vu9i&raw=1', title:'Kermit at His Nightclub', cat:'3D / Blender'},
+      {src:'https://www.dropbox.com/scl/fi/o0lei6xaim8ekhsz6oer2/Zion-was-a-beast-in-HS-shorts-nba-ballislife.mp4?rlkey=sp72iizya886l9ngmsixjzp72&st=ccr9mi32&raw=1', title:'Zion — Beast in HS', cat:'After Effects Edit'},
+      {src:'https://www.dropbox.com/scl/fi/nzlsupb4vl5f13cedunyi/Lamelo-is-him-nba-basketball-edit-shorts.mp4?rlkey=o959yeqn979rzdhtppt3phqmc&st=3ra16him&raw=1', title:'LaMelo is Him', cat:'After Effects Edit'},
+      {src:'https://www.dropbox.com/scl/fi/4pywh2xmk7kxn54t9a34i/Canada-s-BIGGEST-Menace-shorts-nba-basketball-mkiatipis.mp4?rlkey=ubmk66dqjwa44nyqbkcl4i7wo&st=bk4twcey&raw=1', title:"Canada's Biggest Menace", cat:'After Effects Edit'},
+      {src:'https://www.dropbox.com/scl/fi/urme6tjq70cxqk9u6jhzt/ANTHONY-EDWARDS-EDIT-_-off-the-leash-_-4K.mp4?rlkey=kdy5w0fuzghsi97m53adaw8sz&st=ad9n3qy1&raw=1', title:'Ant Edwards — Off the Leash', cat:'After Effects Edit'},
+    ];
 
-      function openImageLightbox(name, index) {
-        curGallery = GALLERIES[name] || [];
-        if (!curGallery.length) return;
-        curIndex = index;
-        lb.classList.add("open");
-        document.body.style.overflow = "hidden";
-        lbImg.style.opacity = "0";
-        showImageSlide(curIndex);
-      }
-      function openVideoLightbox(index) {
-        curGallery = [];
-        curIndex = index;
-        lb.classList.add("open");
-        document.body.style.overflow = "hidden";
-        showVideoSlide(index);
-      }
-      function closeLightbox() {
-        lb.classList.remove("open");
-        document.body.style.overflow = "";
-        lbVid.pause();
-        lbVid.src = "";
-        lbImg.src = "";
-        lbImg.classList.remove("hidden");
-        lbVid.classList.remove("active");
-      }
-      function prevSlide() {
-        if (curGallery.length) {
-          curIndex = (curIndex - 1 + curGallery.length) % curGallery.length;
-          showImageSlide(curIndex);
-        } else {
-          curIndex =
-            (curIndex - 1 + Object.keys(VIDRAW).length) %
-            Object.keys(VIDRAW).length;
-          showVideoSlide(curIndex);
-        }
-      }
-      function nextSlide() {
-        if (curGallery.length) {
-          curIndex = (curIndex + 1) % curGallery.length;
-          showImageSlide(curIndex);
-        } else {
-          curIndex = (curIndex + 1) % Object.keys(VIDRAW).length;
-          showVideoSlide(curIndex);
-        }
-      }
+    const GALLERIES = {
+      design:[
+        {src:RAW.shirtFront,alt:'CoinKids T-shirt front',title:'CoinKids T-Shirt',cat:'Apparel Design'},
+        {src:RAW.shirtBack, alt:'CoinKids T-shirt back', title:'CoinKids T-Shirt',cat:'Apparel Design'},
+        {src:RAW.lamelo,    alt:'LaMelo poster',         title:'LaMelo Ball',     cat:'Poster Design'},
+        {src:RAW.lebron,    alt:'LeBron poster',         title:'LeBron James',    cat:'Poster Design'},
+        {src:RAW.ronaldo,   alt:'Ronaldo poster',        title:'Ronaldo',         cat:'Poster Design'},
+      ],
+      pueblo:[
+        {src:RAW.pueblo1,alt:'Pueblo Inglés certificate',  title:'Programme Certificate',cat:'Pueblo Inglés'},
+        {src:RAW.pueblo2,alt:'Pueblo Inglés volunteers',   title:'Volunteers Group',     cat:'Pueblo Inglés'},
+        {src:RAW.pueblo3,alt:'Pueblo Inglés group',        title:'Volunteers Group',     cat:'Pueblo Inglés'},
+        {src:RAW.pueblo4,alt:'Pueblo Inglés group activity',title:'Group Activity',      cat:'Pueblo Inglés'},
+      ],
+      bball:[
+        {src:RAW.bball1,alt:'Deniz playing basketball',title:'CB Ribes',cat:'Basketball'},
+        {src:RAW.bball2,alt:'Basketball game action',  title:'CB Ribes',cat:'Basketball'},
+        {src:RAW.bball3,alt:'Basketball game photo',   title:'CB Ribes',cat:'Basketball'},
+        {src:RAW.bball4,alt:'Basketball action',       title:'CB Ribes',cat:'Basketball'},
+        {src:RAW.bball5,alt:'Basketball photo',        title:'CB Ribes',cat:'Basketball'},
+      ],
+    };
 
-      document
-        .getElementById("lb-close")
-        .addEventListener("click", closeLightbox);
-      document.getElementById("lb-prev").addEventListener("click", (e) => {
-        e.stopPropagation();
-        prevSlide();
-      });
-      document.getElementById("lb-next").addEventListener("click", (e) => {
-        e.stopPropagation();
-        nextSlide();
-      });
-      lb.addEventListener("click", (e) => {
-        if (e.target === lb) closeLightbox();
-      });
-      document.addEventListener("keydown", (e) => {
-        if (!lb.classList.contains("open")) return;
-        if (e.key === "Escape") closeLightbox();
-        if (e.key === "ArrowLeft") prevSlide();
-        if (e.key === "ArrowRight") nextSlide();
-      });
+    const IMG_SELECTORS = {
+      '.p-item[data-index="0"] img':cdn(RAW.shirtFront,900),
+      '.p-item[data-index="1"] img':cdn(RAW.shirtBack,900),
+      '.p-item[data-index="2"] img':cdn(RAW.lamelo,900),
+      '.p-item[data-index="3"] img':cdn(RAW.lebron,900),
+      '.p-item[data-index="4"] img':cdn(RAW.ronaldo,900),
+      '.photo-cell[data-index="0"][data-gallery="pueblo"] img':cdn(RAW.pueblo1,900),
+      '.photo-cell[data-index="1"][data-gallery="pueblo"] img':cdn(RAW.pueblo2,900),
+      '.photo-cell[data-index="2"][data-gallery="pueblo"] img':cdn(RAW.pueblo3,900),
+      '.photo-cell[data-index="3"][data-gallery="pueblo"] img':cdn(RAW.pueblo4,900),
+      '.photo-cell[data-index="0"][data-gallery="bball"] img': cdn(RAW.bball1,900),
+      '.photo-cell[data-index="1"][data-gallery="bball"] img': cdn(RAW.bball2,900),
+      '.photo-cell[data-index="2"][data-gallery="bball"] img': cdn(RAW.bball3,900),
+      '.photo-cell[data-index="3"][data-gallery="bball"] img': cdn(RAW.bball4,900),
+      '.photo-cell[data-index="4"][data-gallery="bball"] img': cdn(RAW.bball5,900),
+    };
+    for(const [sel,src] of Object.entries(IMG_SELECTORS)){const el=document.querySelector(sel);if(el)el.src=src;}
 
-      let tsX = 0;
-      lb.addEventListener(
-        "touchstart",
-        (e) => {
-          tsX = e.touches[0].clientX;
-        },
-        { passive: true },
-      );
-      lb.addEventListener("touchend", (e) => {
-        const dx = e.changedTouches[0].clientX - tsX;
-        if (Math.abs(dx) > 50) {
-          dx < 0 ? nextSlide() : prevSlide();
-        }
-      });
+    function preloadImg(url){const i=new Image();i.src=cdn(url,1600);}
 
-      document.querySelectorAll(".p-item[data-gallery]").forEach((item) => {
-        item.addEventListener("click", () =>
-          openImageLightbox(item.dataset.gallery, parseInt(item.dataset.index)),
-        );
-      });
-      document.querySelectorAll(".photo-cell[data-gallery]").forEach((cell) => {
-        cell.addEventListener("click", () =>
-          openImageLightbox(cell.dataset.gallery, parseInt(cell.dataset.index)),
-        );
-      });
-      document
-        .querySelectorAll('.p-item[data-gallery="bbedits"]')
-        .forEach((item) => {
-          item.addEventListener("click", () =>
-            openVideoLightbox(parseInt(item.dataset.index)),
-          );
-        });
-      document.querySelectorAll(".p-item[data-ytid]").forEach((item) => {
-        item.addEventListener("click", () => {
-          window.open(
-            "https://www.youtube.com/watch?v=" + item.dataset.ytid,
-            "_blank",
-          );
-        });
-      });
-    </script>
-  </body>
+    /* ── HAMBURGER ── */
+    const burger=document.getElementById('navBurger'),navMobile=document.getElementById('navMobile');
+    burger.addEventListener('click',()=>{burger.classList.toggle('open');navMobile.classList.toggle('open');document.body.style.overflow=navMobile.classList.contains('open')?'hidden':'';});
+    function closeMenu(){burger.classList.remove('open');navMobile.classList.remove('open');document.body.style.overflow='';}
+
+    /* ── CURSOR ── */
+    const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
+    if(dot&&ring){
+      document.addEventListener('mousemove',e=>{dot.style.left=e.clientX+'px';dot.style.top=e.clientY+'px';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';});
+      document.querySelectorAll('a,button,.p-item,.photo-cell:not(.placeholder),#lb-close').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('expanded'));el.addEventListener('mouseleave',()=>ring.classList.remove('expanded'));});
+    }
+
+    /* ── SCROLL REVEAL ── */
+    const ro=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+    /* ── PORTFOLIO FILTER ── */
+    document.querySelectorAll('.filter-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=btn.dataset.filter;document.querySelectorAll('.p-item').forEach(item=>{item.style.display=(f==='all'||item.dataset.type===f)?'':'none';});});});
+
+    /* ── LIFE TABS ── */
+    document.querySelectorAll('.life-tab').forEach(tab=>{tab.addEventListener('click',()=>{document.querySelectorAll('.life-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.life-panel').forEach(p=>p.classList.remove('active'));tab.classList.add('active');document.getElementById('panel-'+tab.dataset.tab).classList.add('active');});});
+
+    /* ── LIGHTBOX ── */
+    let curGallery=[],curIndex=0;
+    const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lb-img'),lbVid=document.getElementById('lb-video'),lbTitle=document.getElementById('lb-title'),lbCat=document.getElementById('lb-cat'),lbDots=document.getElementById('lb-counter');
+
+    function renderDots(arr,idx){lbDots.innerHTML=arr.map((_,i)=>`<div class="lb-dot${i===idx?' active':''}"></div>`).join('');}
+
+    function showImageSlide(idx){
+      const item=curGallery[idx];
+      lbImg.classList.remove('hidden');lbImg.style.opacity='0';
+      lbVid.classList.remove('active');lbVid.pause();lbVid.src='';
+      setTimeout(()=>{lbImg.src=cdn(item.src,1600);lbImg.alt=item.alt;lbTitle.textContent=item.title;lbCat.textContent=item.cat;renderDots(curGallery,idx);lbImg.onload=()=>{lbImg.style.opacity='1';};if(lbImg.complete)lbImg.style.opacity='1';},180);
+      const prev=curGallery[(idx-1+curGallery.length)%curGallery.length],next=curGallery[(idx+1)%curGallery.length];
+      preloadImg(prev.src);preloadImg(next.src);
+    }
+
+    function showVideoSlide(idx){
+      const item=VIDRAW[idx];
+      lbImg.classList.add('hidden');lbVid.classList.add('active');
+      lbVid.src=item.src;lbTitle.textContent=item.title;lbCat.textContent=item.cat;
+      renderDots(VIDRAW,idx);lbVid.play().catch(()=>{});
+    }
+
+    function openImageLightbox(name,index){curGallery=GALLERIES[name]||[];if(!curGallery.length)return;curIndex=index;lb.classList.add('open');document.body.style.overflow='hidden';lbImg.style.opacity='0';showImageSlide(curIndex);}
+    function openVideoLightbox(index){curGallery=[];curIndex=index;lb.classList.add('open');document.body.style.overflow='hidden';showVideoSlide(index);}
+    function closeLightbox(){lb.classList.remove('open');document.body.style.overflow='';lbVid.pause();lbVid.src='';lbImg.src='';lbImg.classList.remove('hidden');lbVid.classList.remove('active');}
+    function prevSlide(){if(curGallery.length){curIndex=(curIndex-1+curGallery.length)%curGallery.length;showImageSlide(curIndex);}else{curIndex=(curIndex-1+VIDRAW.length+VIDRAW.length)%VIDRAW.length;showVideoSlide(curIndex);}}
+    function nextSlide(){if(curGallery.length){curIndex=(curIndex+1)%curGallery.length;showImageSlide(curIndex);}else{curIndex=(curIndex+1)%VIDRAW.length;showVideoSlide(curIndex);}}
+
+    document.getElementById('lb-close').addEventListener('click',closeLightbox);
+    document.getElementById('lb-prev').addEventListener('click',e=>{e.stopPropagation();prevSlide();});
+    document.getElementById('lb-next').addEventListener('click',e=>{e.stopPropagation();nextSlide();});
+    lb.addEventListener('click',e=>{if(e.target===lb)closeLightbox();});
+    document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')closeLightbox();if(e.key==='ArrowLeft')prevSlide();if(e.key==='ArrowRight')nextSlide();});
+
+    let tsX=0;
+    lb.addEventListener('touchstart',e=>{tsX=e.touches[0].clientX;},{passive:true});
+    lb.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tsX;if(Math.abs(dx)>50){dx<0?nextSlide():prevSlide();}});
+
+    document.querySelectorAll('.p-item[data-gallery]').forEach(item=>{item.addEventListener('click',()=>openImageLightbox(item.dataset.gallery,parseInt(item.dataset.index)));});
+    document.querySelectorAll('.photo-cell[data-gallery]').forEach(cell=>{cell.addEventListener('click',()=>openImageLightbox(cell.dataset.gallery,parseInt(cell.dataset.index)));});
+    document.querySelectorAll('.p-item[data-vidindex]').forEach(item=>{item.addEventListener('click',()=>openVideoLightbox(parseInt(item.dataset.vidindex)));});
+  </script>
+</body>
 </html>
