@@ -195,6 +195,15 @@
     .cl-value{font-size:13px;color:var(--text);margin-top:2px;}
     .cl-arrow{margin-left:auto;color:var(--muted);font-size:18px;transition:transform .3s,color .3s;}
     .contact-link:hover .cl-arrow{transform:translate(4px,-4px);color:var(--accent);}
+    /* Copy toast */
+    .copy-toast{
+      position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(16px);
+      background:var(--accent);color:var(--bg);
+      font-family:var(--font-ui);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+      padding:10px 24px;border-radius:2px;
+      opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:9999;
+    }
+    .copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     .contact-right{display:flex;align-items:center;justify-content:center;}
     .contact-monogram{font-family:var(--font-disp);font-size:clamp(80px,12vw,180px);font-weight:300;font-style:italic;color:transparent;-webkit-text-stroke:1px rgba(200,169,110,.18);letter-spacing:-.05em;line-height:1;user-select:none;}
 
@@ -514,11 +523,11 @@
           <h2 class="section-title" data-i18n-html="contact.title">Let's <em>Work</em><br/>Together</h2>
           <p data-i18n="contact.desc">Open to freelance video and design projects, collaborations, and interesting conversations.</p>
           <div class="contact-links">
-            <a class="contact-link" href="/cdn-cgi/l/email-protection#0f6b6a6166756e697c6e7d3e4f607a7b63606064216c6062">
+            <div class="contact-link" id="emailCopyBtn" style="cursor:pointer;">
               <div class="cl-icon">✉</div>
-              <div class="cl-text"><span class="cl-label" data-i18n="contact.email">Email</span><span class="cl-value"><span class="__cf_email__" data-cfemail="3e5a5b5057445f584d5f4c0f7e514b4a52515155105d5153">[email&#160;protected]</span></span></div>
-              <span class="cl-arrow">↗</span>
-            </a>
+              <div class="cl-text"><span class="cl-label" data-i18n="contact.email">Email</span><span class="cl-value">denizafsar1@outlook.com</span></div>
+              <span class="cl-arrow" id="emailArrow">⧉</span>
+            </div>
             <a class="contact-link" href="https://www.linkedin.com/in/deniz-afsar-5981063a0/" target="_blank">
               <div class="cl-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
               <div class="cl-text"><span class="cl-label">LinkedIn</span><span class="cl-value">Deniz Afsar</span></div>
@@ -536,7 +545,9 @@
     <p data-i18n="footer.made">Made with too much free time and After Effects</p>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <div class="copy-toast" id="copyToast">Email copied ✓</div>
+
+  <script>
     /* ══════════════════════════════════════════════════
        TRANSLATIONS
     ══════════════════════════════════════════════════ */
@@ -704,6 +715,18 @@
     for(const [sel,src] of Object.entries(IMG_SELECTORS)){const el=document.querySelector(sel);if(el)el.src=src;}
 
     function preloadImg(url){const i=new Image();i.src=cdn(url,1600);}
+
+    /* ── COPY EMAIL ── */
+    const emailBtn  = document.getElementById('emailCopyBtn');
+    const copyToast = document.getElementById('copyToast');
+    if(emailBtn){
+      emailBtn.addEventListener('click',()=>{
+        navigator.clipboard.writeText('denizafsar1@outlook.com').then(()=>{
+          copyToast.classList.add('show');
+          setTimeout(()=>copyToast.classList.remove('show'),2200);
+        });
+      });
+    }
 
     /* ── HAMBURGER ── */
     const burger=document.getElementById('navBurger'),navMobile=document.getElementById('navMobile');
